@@ -1,0 +1,695 @@
+/* $Id: common.css 1633 2013-07-11 08:27:18Z H.Miyano $ */
+/*******************************************************************************
+ * システム            : 国建システム 社員管理システム
+ * 画面ID              : -
+ * 概要                : 共通スタイルシート
+ * モジュール種別      : CSS
+ * クラス名            : -
+ * 作成日              : 2011-07-30
+ *******************************************************************************
+ * $Date: 2013-07-11 17:27:18 +0900 (木, 11  7月 2013) $
+ * $Revision: 1633 $
+ * $Author: H.Miyano $
+ * $HeadURL: file:///var/www/svn/members/trunk/members/src/main/webapp/css/common.css $
+ */
+
+
+html,
+body {
+	margin:0;                /* マージン */
+	padding:0;               /* パディング */
+	height:100%;             /* 高さ */
+}
+
+#layout {
+	height:100%;             /* 高さ */
+	width:100%;              /* 横幅 */
+	margin:0 auto;           /* マージン */
+}
+
+/* ヘッダ部 */
+#header {
+	width: 100%;             /* 横幅 */
+	position:fixed;          /* 固定表示 */
+	z-index:10;              /* 画面手前に表示 */
+	background-color:#daa520;
+}
+
+/* ヘッダロゴ */
+#header_logo {
+	height:40px;
+	background-color:#99CC66;
+}
+
+/* ログイン情報 */
+#header_login_info {
+	height:20px;
+	padding:3px;
+	background-color:steelblue;
+}
+/* グローバルナビゲーション */
+#header_menu {
+	height:1.5em;
+	width:100%;
+	margin:0px;
+	padding:0px;
+}
+/* グローバルナビゲーション：親メニュー */
+#header_menu_main {
+	list-style-type: none;
+	width: 98%;
+	margin: 0;
+	padding: 0;
+}
+#header_menu_main li {
+    position: relative;
+    width: 160px;
+	float: left;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+#header_menu_main li a {
+	display: block;
+	margin: 0;
+	padding: 10px 10px;
+	background-color: #daa520;
+	color: #ffffff;
+	font-size: 14px;
+	line-height: 1;
+	text-decoration: none;
+}
+/* グローバルナビゲーション：子以下のメニュー */
+#header_menu_main li ul {
+	list-style-type: none;
+	position: absolute;
+	z-index: 100;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+#header_menu_main li ul li {
+	overflow: hidden;
+	width: 100%;
+	height: 0;
+	color: #fff;
+	-ms-transition: .2s;
+	transition: .2s;
+}
+#header_menu_main li ul li a {
+	padding: 13px 10px;
+	background-color: #daa520;
+	text-align: left;
+	font-size: 12px;
+	font-weight: normal;
+}
+/* グローバルナビゲーション：マウスをのせたとき */
+#header_menu_main > li:hover > a { background-color:#f0e68c; }
+#header_menu_main > li:hover li:hover > a { background-color:#f0e68c; }
+#header_menu_main li:hover > ul > li {
+	overflow: visible;
+	height: 38px;
+}
+/* グローバルナビゲーション：孫、ひ孫メニュー */
+#header_menu_main li ul li ul {
+	top: 0;
+	left: 100%;
+}
+/* グローバルナビゲーション：下矢印 */
+#header_menu_main > li > ul:before {
+    position: absolute;
+    content: "";
+    top: -18px;
+    left: 90%;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-top-color: #fff;
+}
+/* グローバルナビゲーション：右矢印 */
+#header_menu_main li ul li ul:before {
+	position: absolute;
+	content: "";
+	top: 13px;
+	left: -20px;
+	width: 0;
+	height: 0;
+	border: 5px solid transparent;
+	border-left-color: #fff;
+}
+/* グローバルナビゲーション：角丸 */
+#header_menu_main > li li:hover ul li:first-child a {
+    border-radius: 3px 3px 0 0;
+}
+#header_menu_main li:hover ul li:last-child a {
+	border-radius: 0 0 3px 3px;
+}
+
+/* パンくずリスト */
+#header_breadcrumb_trails {
+	clear:both;
+	height:20px;
+	padding:3px;
+	background-color:#669966;
+}
+
+#header_breadcrumb_trails > a:link,#header_breadcrumb_trails > a:visited {
+	color:white;
+}
+
+/* 本文 */
+#content_body {
+	height: 100%;              /* 高さ */
+}
+
+#content {
+	padding-top:100px;         /* パディング */
+	padding-bottom:40px;       /* パディング */
+}
+
+#content_body,
+#content {
+	background-color:#CCFF99;  /* 背景色 */
+}
+
+/* フッタ部 */
+#footer {
+	width: 100%;
+	clear:both;
+	padding:10px;
+	background-color:#99CC66;
+	text-align:center;
+	vertical-align:middle;
+	position:fixed;            /* 固定表示 */
+	bottom:0;                  /* 下に固定 */
+	z-index:10;                /* 画面手前に表示 */
+}
+
+/* メイン画面:メッセージ */
+div.message_board {
+	margin-top: 40px;
+	margin-left: 120px;
+	margin-right: 120px;
+}
+div.message_board div.message {
+	padding: 5px;
+	background-color: #ffffe0;
+	width:100%;
+	height: 300px;
+}
+div.message_board div.message div {
+	margin-top: 5px;
+}
+div.message_board td.mdate {
+	color:#708090;
+	padding:5px;
+	vertical-align:top;
+}
+div.message_board td.mtext {
+	color:#708090;
+	padding:5px;
+}
+
+/* テーブルセルalignデフォルト値:左寄せ */
+td {
+	text-align:left;
+}
+
+td.num {
+	text-align:right;
+	vertical-align:bottom;
+}
+td.center {
+	text-align:center;
+}
+td.pd {
+	padding: 3px;
+}
+td.top {
+	vertical-align:top;
+}
+td.bold {
+	font-weight: bold;
+}
+td.bdr-tlbrr {
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-right: 3px double #000000;
+}
+td.bdr-tlbr {
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+td.bdr-tlb {
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #000000;
+}
+td.bdr-tbr {
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+td.bdr-tb {
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+td.bdr-t {
+	border-top: 1px solid #000000;
+}
+td.bdr-b {
+	border-bottom: 1px solid #000000;
+}
+td.bdr-l {
+	border-left: 1px solid #000000;
+}
+td.bdr-r {
+	border-right: 1px solid #000000;
+}
+table.nospace {
+	border-collapse:collapse;
+	border:0px;
+}
+
+/* テーブルヘッダセル: 下二重線 */
+thead td {
+	border-bottom:3px double black;
+}
+
+/*
+ * バリデートエラーメッセージスタイル
+ * <html:errors>の出力に合わせる
+ */
+font ul {
+	list-style-type:none;
+	margin:0px;
+	padding:1px;
+}
+
+/* バリデートエラーフィールドスタイル */
+.errorField, input.error, select.error {
+	background-color:#ffc0cb;
+}
+/* エラーフィールド */
+.errorItem {
+	background-color: pink;
+}
+/* エラーメッセージ */
+.errorMessage, div.errormsg li {
+	color: red;
+}
+/* 必須項目名 */
+.requiredItem {
+	color: blue;
+}
+/* フォントサイズ */
+.small {
+	font-size:small;
+}
+
+/* ■幅width */
+/* 社員情報編集 */
+.W200px {
+	width:200px;	/* 幅200px */
+}
+
+/* 社員情報編集,学歴編集,資格免許編集 */
+.W500px {
+	width :500px;	/* 幅500px */
+}
+
+/* ■字下げ */
+/* 社員情報一覧、業務経歴編集 */
+.box4 {
+	padding-top:1em;
+	margin-left:1em;
+	clear:both;
+}
+
+.floatLtextL {
+	text-align:left;
+	float:left;
+}
+
+.left1 {
+	margin-left:1em;	/* 外側左部の余白の値を1文字分に設定 */
+}
+
+.left2 {
+	margin-left:2em;	/* 外側左部の余白の値を2文字分に設定 */
+}
+
+.right1 {
+	margin-right:1em;	/* 外側右部の余白の値を1文字分に設定 */
+}
+.top1 {
+	padding-top:1em;	/* 内側上部の余白の値を1文字に設定 */
+}
+
+.top2 {
+	margin-top:2em;		/* 外側上部の余白の値を2文字分に設定 */
+}
+
+/* float */
+.floatLeft {
+	float:left;		/* ボックスを左に寄せ、テキスト等を回り込ませる */
+}
+
+.floatRight {
+	float:right;	/* ボックスを右に寄せ、テキスト等を回り込ませる */
+}
+
+.floatClear {
+	clear:both;		/* テキスト等を回り込みを解除 */
+}
+
+/* ■社員情報詳細 */
+/* 学歴、資格免許、業務経歴の項目部分の二重下線付き線 */
+div.faa020empdetailLine {
+	padding-top:2em;
+	margin-left:1em;
+	margin-right:1em;
+	border-bottom:3px double black;
+	clear:both;
+}
+
+/* 学歴、資格免許、業務経歴の詳細部分 */
+div.faa020empdetailField {
+	margin-left:2em;
+	margin-right:1em;
+	padding-top:10px;
+}
+
+div.faa020empdetailFieldSpace {
+	padding-top:5px;
+}
+
+/* 業務経歴の詳細部分1業務ごとの区切り線 */
+div.line {
+	margin-bottom:5px;
+	border-bottom:1px solid black;
+	clear:both;
+}
+
+
+/* ■業務経歴編集 */
+.title {
+	float:left;
+	width :120px;
+}
+
+.kikan {
+	float:left;
+	width :200px;
+}
+.nami {
+	float:left;
+	margin-right:1em;
+	width :20px;
+}
+
+.check {
+	float:left;
+	width :370px;
+}
+
+.check2 {
+
+	min-width :750px;
+}
+
+.koushin {
+	padding-top:1em;
+	margin-left:1em;
+	clear:both;
+	width :750px;
+}
+
+.tree1 {
+	float:left;
+	width :370px;
+}
+
+.wq {
+	float:center;
+	margin-top:1em;
+	margin-left:1em;
+}
+
+.gyoumumei, .bikou {
+	float:left;
+	width :550px;
+}
+
+.comment1 {
+	float:left;
+	width:300px;
+}
+.comment2 {
+	float:left;
+	width:300px;
+	overflow : hidden;
+}
+
+.orange {
+	background-color:orange;
+}
+
+
+/* ■リンク */
+A {
+}
+
+A:link {
+	color: #0000cc;
+}
+
+A:hover {
+	color: red;
+}
+
+A:active {
+	color: blue;
+}
+
+A.plus {
+	text-decoration: none;
+}
+
+/* スケジュール/施設備品予約の複写登録用 */
+A.copy {
+	text-decoration: none;
+}
+
+A.copy:link {
+	color: blue;
+}
+
+A.copy:visited {
+	color: blue;
+}
+
+A.copy:hover {
+	color: blue;
+}
+
+A.copy:active {
+	color: blue;
+}
+
+/* ログイン者用 */
+A.login:link {
+	color: #ffffff;
+}
+
+A.login:visited {
+	color: #ffffff;
+}
+
+A.login:hover {
+	color: #ffffff;
+}
+
+A.login:active {
+	color: #ffffff;
+}
+
+/*
+ * ■グラフ表示用
+ */
+.chart {
+	border-collapse: collapse; /* 枠線の表示方法 */
+	border: 1px #000000 solid; /* テーブル全体の枠線（太さ・色・スタイル） */
+}
+
+/* ■編集画面の会議卓場所画像表示用 */
+.popup img {
+	display:block;
+	top:-10000px;
+	left:-10000px;
+	position:absolute;
+}
+
+.popup a:hover {
+	position:relative;
+}
+
+.popup a:hover img {
+	top:50px;
+	left:-200px;
+	z-index:11;
+}
+
+/* ■左寄せ */
+.textL {
+	text-align: left;
+}
+
+/* ■右寄せ */
+.textR {
+	text-align: right;
+}
+
+/* ■中央寄せ */
+.textC {
+	text-align: center;
+}
+
+/* ■上寄せ */
+.textU {
+	vertical-align:top;
+}
+
+/* ■下寄せ */
+.textD {
+	vertical-align:bottom;
+}
+
+
+/* 編集画面のセレクトボックスの幅指定 */
+.select {
+	width:150px;
+}
+
+
+/* カレンダー日付表示 */
+.date {
+	font-size:150%;
+	color:#0000ff;
+	width:120px;
+	background:#CCFF99;
+/* 	background:#ffc428; */
+	border:0px;
+}
+
+
+/* 長い文字表示用（単語途中でも改行する）*/
+.wordbreak {
+	word-break:break-all;
+	word-wrap: break-word;
+	width:120px;
+}
+
+
+/* ■権限割当画面 */
+/* 検索条件部分部分 */
+.search {
+	margin-top:1em;
+	margin-bottom:1em;
+	clear:both;
+	overflow:auto;
+}
+
+/* 更新ボタン */
+.btmbutton {
+	margin-top:1em;
+	margin-bottom:1em;
+}
+
+
+/*************************************
+ * 資産管理 データ表示用テーブル定義
+ */
+table.ksDataTable {	border-collapse: collapse; width: 100%; }
+table.ksDataTable td { font-size: 12px; }
+table.ksDataTable thead, table.ksDataTable tfoot { background-color: mediumseagreen; color: white; }
+table.ksDataTable thead a { color: white; }
+table.ksDataTable thead tr td, table.ksDataTable tfoot tr td { border-style: solid; border-width: 0px; padding: 3px 0px; }
+table.ksDataTable tbody td { padding: 0px; }
+table.ksDataTable tbody tr.oddRecord, table.ksDataTable tbody tr:nth-child(2n+1) { background-color: palegreen; }
+table.ksDataTable tbody tr.evenRecord, table.ksDataTable tbody tr:nth-child(2n+0) { background-color: lightgreen; }
+table.ksDataTable tbody tr.fixRecord { background-color: gray; }
+table.ksDataTable tbody tr:hover { background-color: aquamarine; }
+table.ksDataTable tbody tr.assignRecord { color: blue; }
+/* テキスト(IMEオフ) */
+input[type=text].n2, input[type=password].n2  { width: 2em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n3, input[type=password].n3  { width: 3em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n4, input[type=password].n4  { width: 4em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n5, input[type=password].n5  { width: 5em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n6, input[type=password].n6  { width: 6em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n7, input[type=password].n7  { width: 7em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n8, input[type=password].n8  { width: 8em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n9, input[type=password].n9  { width: 9em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n10,input[type=password].n10 { width:10em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n11,input[type=password].n11 { width:11em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n12,input[type=password].n12 { width:12em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n13,input[type=password].n13 { width:13em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n14,input[type=password].n14 { width:14em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n15,input[type=password].n15 { width:15em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n16,input[type=password].n16 { width:16em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n17,input[type=password].n17 { width:17em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n18,input[type=password].n18 { width:18em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n19,input[type=password].n19 { width:19em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n20,input[type=password].n20 { width:20em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n21,input[type=password].n21 { width:21em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n22,input[type=password].n22 { width:22em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n23,input[type=password].n23 { width:23em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n24,input[type=password].n24 { width:24em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n25,input[type=password].n25 { width:25em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n30,input[type=password].n30 { width:30em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n35,input[type=password].n35 { width:35em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n40,input[type=password].n40 { width:40em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n45,input[type=password].n45 { width:45em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n50,input[type=password].n50 { width:50em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n55,input[type=password].n55 { width:55em !important; text-align: left; ime-mode: disabled; }
+input[type=text].n60,input[type=password].n60 { width:60em !important; text-align: left; ime-mode: disabled; }
+
+input[type=text].s2  { width: 2em !important; text-align: left; ime-mode: active; }
+input[type=text].s3  { width: 3em !important; text-align: left; ime-mode: active; }
+input[type=text].s4  { width: 4em !important; text-align: left; ime-mode: active; }
+input[type=text].s5  { width: 5em !important; text-align: left; ime-mode: active; }
+input[type=text].s6  { width: 6em !important; text-align: left; ime-mode: active; }
+input[type=text].s7  { width: 7em !important; text-align: left; ime-mode: active; }
+input[type=text].s8  { width: 8em !important; text-align: left; ime-mode: active; }
+input[type=text].s9  { width: 9em !important; text-align: left; ime-mode: active; }
+input[type=text].s10 { width:10em !important; text-align: left; ime-mode: active; }
+input[type=text].s11 { width:11em !important; text-align: left; ime-mode: active; }
+input[type=text].s12 { width:12em !important; text-align: left; ime-mode: active; }
+input[type=text].s13 { width:13em !important; text-align: left; ime-mode: active; }
+input[type=text].s14 { width:14em !important; text-align: left; ime-mode: active; }
+input[type=text].s15 { width:15em !important; text-align: left; ime-mode: active; }
+input[type=text].s16 { width:16em !important; text-align: left; ime-mode: active; }
+input[type=text].s17 { width:17em !important; text-align: left; ime-mode: active; }
+input[type=text].s18 { width:18em !important; text-align: left; ime-mode: active; }
+input[type=text].s19 { width:19em !important; text-align: left; ime-mode: active; }
+input[type=text].s20 { width:20em !important; text-align: left; ime-mode: active; }
+input[type=text].s21 { width:21em !important; text-align: left; ime-mode: active; }
+input[type=text].s22 { width:22em !important; text-align: left; ime-mode: active; }
+input[type=text].s23 { width:23em !important; text-align: left; ime-mode: active; }
+input[type=text].s24 { width:24em !important; text-align: left; ime-mode: active; }
+input[type=text].s25 { width:25em !important; text-align: left; ime-mode: active; }
+input[type=text].s30 { width:30em !important; text-align: left; ime-mode: active; }
+input[type=text].s35 { width:35em !important; text-align: left; ime-mode: active; }
+input[type=text].s40 { width:40em !important; text-align: left; ime-mode: active; }
+input[type=text].s45 { width:45em !important; text-align: left; ime-mode: active; }
+input[type=text].s50 { width:50em !important; text-align: left; ime-mode: active; }
+input[type=text].s55 { width:55em !important; text-align: left; ime-mode: active; }
+input[type=text].s60 { width:60em !important; text-align: left; ime-mode: active; }
+/* ajax通信用のインジケータ */
+div.ingicator {position: fixed; z-index : 999; top : 50%; left : 50%; display : none; }
+

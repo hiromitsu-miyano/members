@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Expires" content="Thu, 01 Dec 1994 16:00:00 GMT" />
+<meta http-equiv="robots" content="noindex,nofollow" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="content-style-type" content="text/css"/>
+<title>title</title>
+<link rel="stylesheet" type="text/css" href="/css/common.css"/>
+<link rel="stylesheet" type="text/css" href="/css/jquery-ui-1.8.21.custom.css" />
+<script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui-1.8.21.custom.min.js"></script>
+<script type="text/javascript" src="/js/jquery.ui.datepicker-ja.js"></script>
+<script type="text/javascript" src="/js/members.js"></script>
+<!-- 戻るボタン無効 -->
+<script type="text/javascript">
+	window.onunload = function(){};
+	history.forward();
+</script>
+</head>
+<body>
+<div id="layout">
+	<div id="header" th:replace="co/bodyheader::bodyheader">
+		<!--/* ログイン情報 */-->
+		<div id="header_logo">
+			<span style="color: white; font-size: x-large; margin: 5px 5px;" th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}"></span>
+			<span style="color: white; font-size: 12px;" th:text="${T(jp.co.kunisys.member.common.Constants).APPLICATION_VERSION}"></span>
+			<span style="color: white; float: right;">
+				<br/>
+				<span th:if="${#authorization.expression('isAuthenticated()')">
+					ログイン：
+					<a href="#" class="login">
+						<span th:text="${#authentication.principal.username}"></span>
+					</a>
+				</span>
+				<span>
+					未ログイン
+				</span>
+			</span>
+		</div>
+		<!--/* パスワード変更ダイアロ */-->
+		<div id="password_change" style="background-color: palegreen; margin-top: 15px; display: none;">
+			<table>
+				<tr><td>現在のパスワード</td><td><input type="text" id="OldPassword"/></td></tr>
+				<tr><td>新パスワード</td><td><input type="text" id="NewPassword"/></td></tr>
+				<tr><td>新パスワード(再入力)</td><td><input type="text" id="NewRePassword"/></td></tr>
+				<tr><td></td><td><input type="button" id="BtnPasswordChange" value="パスワード変更" /></td></tr>
+			</table>
+		</div>
+	</div>
+	<div id="content_body" >
+		<div id="content">
+			<!-- GLOBAL_MESSAGE表示欄 -->
+			<!--
+			<html:messages id="msg" message="true" property="org.apache.struts.action.GLOBAL_MESSAGE">
+				<span style="font-weight:bold;color:#0000ff;"><bean:write name="msg" ignore="true"/></span>
+			</html:messages> -->
+			<!-- メインコンテンツ設定欄 -->
+			<!-- <tiles:insert attribute="content"/> -->
+			<div align="center" layout:fragment="content">
+			</div>
+		</div>
+	</div>
+	<div id="footer">
+		<!-- <tiles:insert page="footer.jsp" /> -->
+	</div>
+	<div class="ingicator"><img src="/images/guruguru1.gif"/></div>
+</div>
+</body>
+</html>

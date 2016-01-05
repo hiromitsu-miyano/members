@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div id="header" th:fragment="bodyheader">
+		<!-- <tiles:insert page="header.jsp" /> -->
+		<!--/* ログイン情報 */-->
+		<div id="header_logo">
+			<span style="color: white; font-size: x-large; margin: 5px 5px;" th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}"></span>
+			<span style="color: white; font-size: 12px;" th:text="${T(jp.co.kunisys.member.common.Constants).APPLICATION_VERSION}"></span>
+			<span style="color: white; float: right;">
+				<br/>
+				<!--
+				<span>
+					ログイン：
+					<a href="#" class="login"></a>
+				</span> -->
+				<span>
+					未ログイン
+				</span>
+			</span>
+		</div>
+		<!--/* パスワード変更ダイアロ */-->
+		<div id="password_change" style="background-color: palegreen; margin-top: 15px; display: none;">
+			<table>
+				<tr><td>現在のパスワード</td><td><input type="text" id="OldPassword"/></td></tr>
+				<tr><td>新パスワード</td><td><input type="text" id="NewPassword"/></td></tr>
+				<tr><td>新パスワード(再入力)</td><td><input type="text" id="NewRePassword"/></td></tr>
+				<tr><td></td><td><input type="button" id="BtnPasswordChange" value="パスワード変更" /></td></tr>
+			</table>
+		</div>
+	</div>
+</body>
+</html>
