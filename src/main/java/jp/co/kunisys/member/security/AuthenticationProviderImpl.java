@@ -36,6 +36,8 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
 	public Authentication authenticate(Authentication auth) throws AuthenticationException {
 		String account = auth.getName();
 		String password = auth.getCredentials().toString();
+		log.debug(String.format("ログイン処理:account=%s password=%s", account, password));
+
 		if ("".equals(account) || "".equals(password)) {
 			throw new AuthenticationCredentialsNotFoundException("ログイン情報に不備があります。");
 		}

@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.formLogin()
 				.loginPage("/COA000/init")
 				.loginProcessingUrl("/COA000/login")
-				.defaultSuccessUrl("/COB000/init")
+				.defaultSuccessUrl("/COB000/init", true)
 				.usernameParameter("account")
 				.passwordParameter("password")
 				.permitAll();/*
