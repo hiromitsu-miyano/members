@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import jp.co.kunisys.member.security.AuthenticationProviderImpl;
 import jp.co.kunisys.member.security.UserDetailsServiceImpl;
@@ -39,13 +40,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.defaultSuccessUrl("/COB000/init", true)
 				.usernameParameter("account")
 				.passwordParameter("password")
-				.permitAll();/*
+				.permitAll()
 				.and()
 			.logout()
-				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.logoutRequestMatcher(new AntPathRequestMatcher("/COB000/logout"))
 				.logoutSuccessUrl("/COA000/init")
 				.invalidateHttpSession(true)
-				.permitAll();*/
+				.permitAll();
 	}
 
 	@Autowired
