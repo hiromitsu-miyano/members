@@ -10,12 +10,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta http-equiv="content-style-type" content="text/css"/>
 <title>title</title>
-<link rel="stylesheet" type="text/css" href="/css/common.css"/>
-<link rel="stylesheet" type="text/css" href="/css/jquery-ui-1.8.21.custom.css" />
-<script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="/js/jquery-ui-1.8.21.custom.min.js"></script>
-<script type="text/javascript" src="/js/jquery.ui.datepicker-ja.js"></script>
-<script type="text/javascript" src="/js/members.js"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/jquery-ui-1.8.21.custom.css}" />
+<script type="text/javascript" th:src="@{/js/jquery-1.7.2.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery-ui-1.8.21.custom.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.ui.datepicker-ja.js}"></script>
+<script type="text/javascript" th:src="@{/js/members.js}"></script>
 <!-- 戻るボタン無効 -->
 <script type="text/javascript">
 	window.onunload = function(){};
@@ -24,25 +24,27 @@
 </head>
 <body>
 <div id="layout">
-	<div id="header" th:replace="co/bodyheader::bodyheader">
+	<div id="header">
 		<!--/* ログイン情報 */-->
 		<div id="header_logo">
 			<span style="color: white; font-size: x-large; margin: 5px 5px;" th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}"></span>
 			<span style="color: white; font-size: 12px;" th:text="${T(jp.co.kunisys.member.common.Constants).APPLICATION_VERSION}"></span>
 			<span style="color: white; float: right;">
 				<br/>
-				<span th:if="${#authorization.expression('isAuthenticated()')">
+				<span sec:authorize="isAuthenticated()">
 					ログイン：
 					<a href="#" class="login">
 						<span th:text="${#authentication.principal.username}"></span>
 					</a>
+					<a href="#" id="ChangePassword" class="login" style="margin-left:20px;">パスワード変更</a>
+					<a href="logout" class="login"  style="margin-left:10px;">ログアウト</a>
 				</span>
-				<span>
+				<span sec:authorize="!isAuthenticated()">
 					未ログイン
 				</span>
 			</span>
 		</div>
-		<!--/* パスワード変更ダイアロ */-->
+		<!--/* パスワード変更ダイアログ */-->
 		<div id="password_change" style="background-color: palegreen; margin-top: 15px; display: none;">
 			<table>
 				<tr><td>現在のパスワード</td><td><input type="text" id="OldPassword"/></td></tr>
@@ -50,6 +52,56 @@
 				<tr><td>新パスワード(再入力)</td><td><input type="text" id="NewRePassword"/></td></tr>
 				<tr><td></td><td><input type="button" id="BtnPasswordChange" value="パスワード変更" /></td></tr>
 			</table>
+		</div>
+		<!--/* グローバルナビゲーション */-->
+		<div id="header_menu" sec:authorize="isAuthenticated()">
+			<ul id="header_menu_main">
+				<li><a href="#" style="text-decoration: none;" class="menuItem">社員情報一覧</a></li>
+				<li><a href="#" style="text-decoration: none;" class="menuItem">社員個人情報検索</a></li>
+				<li>
+					<a href="#">業務分析</a>
+					<ul>
+						<li><a href="#" class="menuItem">プロジェクト情報管理</a></li>
+						<li><a href="#" class="menuItem">業務分析</a></li>
+						<li><a href="#" class="menuItem">業務分析(月別)</a></li>
+						<li><a href="#" class="menuItem">稼働分析(月別)</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">資産管理</a>
+					<ul>
+						<li><a href="#" class="menuItem">資産分類管理</a></li>
+						<li>
+							<a href="#">資産管理</a>
+							<ul>
+								<li><a href="#" class="menuItem">サーバアクセス権限管理</a></li>
+								<li><a href="#" class="menuItem">ハードウェア管理</a></li>
+								<li><a href="#" class="menuItem">ソフトウェア管理</a></li>
+								<li><a href="#" class="menuItem">入出庫管理</a></li>
+								<li><a href="#" class="menuItem">資産管理</a></li>
+								<li><a href="#" class="menuItem">ＩＰアドレス管理</a></li>
+								<li><a href="#" class="menuItem">仮想マシン管理</a></li>
+								<li><a href="#" class="menuItem">システム管理</a></li>
+							</ul>
+						</li>
+						<li><a href="#" class="menuItem">リスクアセスメント管理</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">システムメンテナンス</a>
+					<ul>
+						<li><a href="#" class="menuItem">スキルメンテナンス</a></li>
+						<li><a href="#" class="menuItem">権限情報メンテナンス</a></li>
+						<li><a href="#" class="menuItem">権限割当</a></li>
+						<li><a href="#" class="menuItem">部署メンテナンス</a></li>
+						<li><a href="#" class="menuItem">職位メンテナンス</a></li>
+						<li><a href="#" class="menuItem">勤務先メンテナンス</a></li>
+						<li><a href="#" class="menuItem">区分メンテナンス</a></li>
+						<li><a href="#" class="menuItem">学校メンテナンス</a></li>
+						<li><a href="#" class="menuItem">連携ユーザメンテナンス</a></li>
+					</ul>
+				</li>
+			</ul>
 		</div>
 	</div>
 	<div id="content_body" >
@@ -68,7 +120,7 @@
 	<div id="footer">
 		<!-- <tiles:insert page="footer.jsp" /> -->
 	</div>
-	<div class="ingicator"><img src="/images/guruguru1.gif"/></div>
+	<div class="ingicator"><img th:src="@{/images/guruguru1.gif}"/></div>
 </div>
 </body>
 </html>
