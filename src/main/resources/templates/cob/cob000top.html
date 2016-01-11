@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="co/layout">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
 <head>
 <title>ログイン</title>
 </head>
@@ -9,6 +12,7 @@
 		<div id="content">
 			<!-- メインコンテンツ設定欄 -->
 			<div align="center" layout:fragment="content">
+
 				<!--/* メッセージ */-->
 				<div class="message_board">
 					<a href="#">メッセージ編集</a>
@@ -21,6 +25,7 @@
 						</table>
 					</div>
 				</div>
+
 			</div>
 		</div>
 	</div>

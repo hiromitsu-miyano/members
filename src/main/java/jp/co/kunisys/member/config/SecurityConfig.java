@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private AuthenticationProviderImpl authenticationProvider;
 
 	/**
-	 * セキュリティ設定の実行
+	 * セキュリティ設定
 	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
