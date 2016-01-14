@@ -18,8 +18,96 @@
 <script type="text/javascript" th:src="@{/js/members.js}"></script>
 <!-- 戻るボタン無効 -->
 <script type="text/javascript">
-	window.onunload = function(){};
-	history.forward();
+window.onunload = function(){};
+history.forward();
+$(function(){
+	<!--/* パスワード変更ダイアログ設定 */-->
+	$("#password_change").dialog({
+		autoOpen: false,
+		show: "explode",
+		hide: "explode",
+		title: "パスワード変更",
+		modal: true,
+		width: 650,
+		close: function(event) {
+		}
+	});
+	<!--/* 権限により非表示になったメニューの親メニューを隠す */-->
+	$("#header_menu_main li").not(':has(.menuItem)').each(function(){
+		$(this).css({display: "none"});
+	});
+
+	<!--/* パスワード変更リンククリック時イベント */-->
+	$("#ChangePassword").click(function(){
+		clearPassword();
+		$('#password_change').dialog('open');
+	});
+	<!--/* パスワード更新ボタン押下時イベント設定 */-->
+	$("#BtnPasswordChange").click(changePassword);
+	<!--/* パスワード更新処理 */-->
+	function changePassword() {
+		if (!checkPassword()) return;
+		// サーバ要求
+		var params = {};
+		params['oldPassword'] = $("#OldPassword").val();
+		params['newPassword'] = $("#NewPassword").val();
+		params['newRePassword'] = $("#NewRePassword").val();
+		MJSAJAX.exec({
+			url:"updatePassword", cache:false, dataType:"json", data:params,
+			success: function(data) {
+				if (data.result == 'success') {
+					alert('パスワードを変更しました。');
+					clearPassword();
+					$('#password_change').dialog('close');
+				} else {
+					if (data.resultReason == 'oldPassword') {
+						$("#OldPassword").addClass('errorField');
+					}
+					alert(data.result);
+				}
+			}
+		});
+	}
+	<!--/* パスワードチェック */-->
+	function checkPassword() {
+		$("#OldPassword").removeClass('errorField');
+		$("#NewPassword").removeClass('errorField');
+		$("#NewRePassword").removeClass('errorField');
+
+		if (!$("#OldPassword").val() || $("#OldPassword").val().length == 0) {
+			$("#OldPassword").addClass('errorField');
+			alert('現在のパスワードが入力されていません。');
+			return false;
+		}
+		if (!$("#NewPassword").val() || $("#NewPassword").val().length == 0) {
+			$("#NewPassword").addClass('errorField');
+			alert('新パスワードが入力されていません。');
+			return false;
+		}
+		if (!$("#NewRePassword").val() || $("#NewRePassword").val().length == 0) {
+			$("#NewRePassword").addClass('errorField');
+			alert('新パスワード(再入力)が入力されていません。');
+			return false;
+		}
+		if ($("#NewPassword").val() != $("#NewRePassword").val()) {
+			$("#NewPassword").addClass('errorField');
+			$("#NewRePassword").addClass('errorField');
+			alert('パスワードが一致しません。');
+			return false;
+		}
+
+		return true;
+	}
+	<!--/* パスワードクリア */-->
+	function clearPassword() {
+		$("#OldPassword").removeClass('errorField');
+		$("#NewPassword").removeClass('errorField');
+		$("#NewRePassword").removeClass('errorField');
+		$("#OldPassword").val('');
+		$("#NewPassword").val('');
+		$("#NewRePassword").val('');
+	}
+});
 </script>
 </head>
 <body>
