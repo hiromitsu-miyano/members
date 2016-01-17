@@ -12,6 +12,8 @@ import jp.co.kunisys.member.entity.UserInfo;
  */
 @Repository
 public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> {
+	/** ユーザ情報取得(ユーザID) */
+	public UserInfo findByUserId(Integer userId);
 	/** ユーザ情報取得(アカウント) */
 	public List<UserInfo> findByAccount(String account);
 }

@@ -16,4 +16,10 @@ public class COB000Form implements Serializable {
 	private String newPassword;
 	/** 新パスワード(再入力) */
 	private String newRePassword;
+
+    /** 処理結果. */
+    private String result = "success";
+    /** 処理結果理由. */
+    private String resultReason;
+
 }
