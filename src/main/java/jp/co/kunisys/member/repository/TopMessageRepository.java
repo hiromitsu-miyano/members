@@ -5,11 +5,13 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import jp.co.kunisys.member.entity.TopMessage;
+
 /**
  * メッセージリポジトリ
  */
 @Repository
-public class TopMessageRepository extends AbstractRepository {
+public class TopMessageRepository extends AbstractRepository<TopMessage> {
 
 	/**
 	 * コンストラクタ

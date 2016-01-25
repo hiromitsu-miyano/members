@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import jp.co.kunisys.member.form.COB000Form;
+import jp.co.kunisys.member.repository.TopMessageRepository;
 import jp.co.kunisys.member.repository.UserInfoRepository;
 import jp.co.kunisys.member.security.LoginUser;
 
@@ -14,6 +15,12 @@ public class COB000Service {
 	@Autowired
 	private UserInfoRepository userInfoRepository;
 
+	@Autowired
+	private TopMessageRepository topMessageRepository;
+
+	public void searchMessageListLimit() {
+		this.topMessageRepository.findAll();
+	}
 
 	/**
 	 * パスワード変更処理

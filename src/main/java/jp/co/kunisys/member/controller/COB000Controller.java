@@ -29,6 +29,7 @@ public class COB000Controller {
      */
     @RequestMapping(value = "/init")
     public String init() {
+    	this.cob000Service.searchMessageListLimit();
     	return MY_VIEW;
     }
 
