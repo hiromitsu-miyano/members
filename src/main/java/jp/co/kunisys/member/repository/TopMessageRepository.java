@@ -1,14 +1,22 @@
 package jp.co.kunisys.member.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import javax.sql.DataSource;
 
-import jp.co.kunisys.member.entity.TopMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  * メッセージリポジトリ
  */
 @Repository
-public interface TopMessageRepository extends JpaRepository<TopMessage, Long> {
+public class TopMessageRepository extends AbstractRepository {
 
+	/**
+	 * コンストラクタ
+	 * @param ds データソース
+	 */
+	@Autowired
+	public TopMessageRepository(DataSource ds) {
+		setDataSource(ds);
+	}
 }
