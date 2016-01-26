@@ -226,6 +226,28 @@ public abstract class AbstractRepository<T> extends NamedParameterJdbcDaoSupport
 	}
 
 	/**
+	 * delete を生成する
+	 * @return delete
+	 */
+	private String createDelete() {
+		List<String> idList = getEntityFieldList(Id.class);
+
+		StringBuilder targets = new StringBuilder();
+		targets.append("delete from ").append(getTableName());
+
+		StringBuilder where = new StringBuilder();
+		for (int i = 0; i < idList.size(); i++) {
+			if (i == 0) where.append(" where ");
+			else where.append(" and ");
+
+			String name = idList.get(i);
+			where.append(SUtil.decamelize(name).toLowerCase()).append(" = :").append(name);
+		}
+
+		return targets.toString() + where.toString() + ";";
+	}
+
+	/**
 	 * 「select * from T」を返す。
 	 * @return sql文字列
 	 */
@@ -361,6 +383,30 @@ public abstract class AbstractRepository<T> extends NamedParameterJdbcDaoSupport
 		}
 
 		String sql = createUpdate();
+		log.debug("query: " + sql);
+		return getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(entity));
+	}
+
+
+	/**
+	 * エンティティ内容をＤＢより削除する
+	 * @param entity エンティティ
+	 * @return 削除件数
+	 */
+	public int delete(T entity) {
+		T ret = findOneById(entity);
+		if (ret == null) {
+			//主キー該当のデータなし
+			throw new IncorrectResultSizeDataAccessException("該当データがありません。", 1, 0);
+		}
+
+		boolean isVersion = equalVersion(entity, ret);
+		if (! isVersion) {
+			//排他例外
+			throw new OptimisticLockingFailureException("バージョン番号が異なる。");
+		}
+
+		String sql = createDelete();
 		log.debug("query: " + sql);
 		return getNamedParameterJdbcTemplate().update(sql, new BeanPropertySqlParameterSource(entity));
 	}

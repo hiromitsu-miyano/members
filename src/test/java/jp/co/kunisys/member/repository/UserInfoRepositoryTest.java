@@ -100,6 +100,19 @@ public class UserInfoRepositoryTest {
 		this.repository.update(entity);
 	}
 
+	/**
+	 * {@link UserInfoRepository#delete(UserInfo)}のテスト
+	 */
+	@Transactional
+	@Test
+	public void testDelete() {
+		UserInfo entity = new UserInfo();
+		entity.setUserId(1000);
+		entity.setAccount("test");
+		entity.setVersion(15);
+		this.repository.delete(entity);
+	}
+
 	@Transactional
 	@Test
 	public void testFindByAccount() {
