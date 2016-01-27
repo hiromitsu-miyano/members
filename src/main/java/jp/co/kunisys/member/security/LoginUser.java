@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jp.co.kunisys.member.entity.UserInfo;
@@ -22,6 +23,14 @@ public class LoginUser implements UserDetails {
 
 	private List<? extends GrantedAuthority> authorities;
 
+
+	/**
+	 * 現在ログイン中のユーザを返す
+	 * @return ログインユーザ情報
+	 */
+	public static LoginUser getUser() {
+		return (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
 
 	/**
 	 * コンストラクタ

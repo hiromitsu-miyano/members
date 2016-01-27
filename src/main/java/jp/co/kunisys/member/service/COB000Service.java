@@ -1,7 +1,6 @@
 package jp.co.kunisys.member.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import jp.co.kunisys.member.form.COB000Form;
@@ -27,8 +26,7 @@ public class COB000Service {
 	 * @return
 	 */
 	public boolean changePassword(COB000Form form) {
-		LoginUser login = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (login.getPassword().equals(form.getOldPassword())) {
+		if (LoginUser.getUser().getPassword().equals(form.getOldPassword())) {
 			return false;
 		}
 

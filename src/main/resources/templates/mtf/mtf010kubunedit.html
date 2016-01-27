@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
+<head>
+<title th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}">区分マスタメンテナンス</title>
+<style type="text/css">
+<!--
+#kubunListHeader a { color: white; }
+thead tr td { border-style: solid; border-width: 0px; padding: 5px; }
+#kubunListArea tr:hover { background-color: aquamarine; }
+.oddRecord { background-color: palegreen; }
+.evenRecord { background-color: lightgreen; }
+.errorItem { background-color: pink; }
+.errorMessage { color: red; }
+.requiredItem { color: blue; }
+#kubunListArea input:checked { outline: inset 3px red; }
+#tbl_out { position: relative; padding-top: 30px; width: 1050px; }
+#tbl_in { overflow: auto; height: 400px; }
+#scr_tbl { border-collapse: collapse; width: 100%; }
+#scr_tbl thead { background-color: mediumseagreen; color: white; }
+#scr_tbl thead tr { position: absolute; top: 0px; left: 0px; background-color: mediumseagreen; color: white; width:100%; }
+#scr_tbl thead tr td { padding:5px 1px; }
+-->
+</style>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+<!--/* 初期処理 */-->
+$(function(){
+	<!--/* 編集ダイアログ設定 */-->
+	$("#KubunEditDlg").dialog({
+		autoOpen: false,
+		show: "explode",
+		hide: "explode",
+		title: '区分編集',
+		modal: true,
+		width: 450,
+		close: function(event) {
+		}
+	});
+
+	<!--/*「区分種別」変更時イベント */-->
+	$("#selectKubunType").change(searchKubun);
+	<!--/*「区分追加」リンク押下時イベント設定 */-->
+	$("#openEditDialog").click(openInputDialog);
+	<!--/*「登録」ボタン押下時イベント設定 */-->
+	$("#btnInsert").click(insertKubun);
+	<!--/*「更新」ボタン押下時イベント設定 */-->
+	$("#btnUpdate").click(updateKubun);
+	<!--/*「削除」ボタン押下時イベント設定 */-->
+	$("#btnDelete").click(deleteKubun);
+	<!--/*「クリア」ボタン押下時イベント設定 */-->
+	$("#btnClear").click(clearKubun);
+
+	<!--/* 初回検索の後処理 */-->
+	searchKubunAfter();
+});
+<!--/* 区分検索処理 */-->
+function searchKubun() {
+	var params = {};
+	params['selectKubunType'] = $("#selectKubunType").val();
+	MJSAJAX.exec({
+		url:"searchKubun", cache:false, dataType:"html", data:params,
+		success: function(data) {
+			$("#kubunListArea").html(data);
+			searchKubunAfter();
+		}
+	});
+}
+<!--/* 区分検索後処理 */-->
+function searchKubunAfter(){
+	$("#kubunCount").text( $("#kubunListArea tr").length );
+	<!--/* 行ダブルクリック時イベント設定 */-->
+	$("#kubunListArea tr").dblclick(openEditDialog);
+}
+<!--/* ダイアログオープン処理(追加モード) */-->
+function openInputDialog(){
+	var code = $("#selectKubunType option:selected").val();
+	var name = $("#selectKubunType option:selected").text();
+	if (!code || code==null || code=="") {
+		$("#inputTypeCode").text('000');
+		$("#inputTypeName").text('区分種別');
+	} else {
+		$("#inputTypeCode").text(code);
+		$("#inputTypeName").text(name);
+	}
+
+	$(".errorItem").removeClass('errorItem');
+	$(".errorMessage").remove('');
+	$("#inputCode").val('');
+	$("#inputName").val('');
+	$("#btnInsert").removeAttr('disabled');
+	$("#btnUpdate").attr('disabled','disabled');
+	$("#btnDelete").attr('disabled','disabled');
+	$('#KubunEditDlg').dialog('open');
+}
+<!--/* ダイアログオープン処理(編集モード) */-->
+function openEditDialog(){
+	var params = {};
+	params['selectSeq'] = this.id;
+	MJSAJAX.exec({
+		url:"selectKubun", cache:false, dataType:"json", data:params,
+		success: function(data) {
+			$("#inputSeq").val( data.selectSeq );
+			$("#inputTypeCode").text( data.inputTypeCode );
+			$("#inputTypeName").text( data.inputTypeName );
+			$("#inputCode").val( data.inputCode );
+			$("#inputName").val( data.inputName );
+			$("#inputVersion").val( data.inputVersion );
+
+			$(".errorItem").removeClass('errorItem');
+			$(".errorMessage").remove('');
+			$("#btnInsert").attr('disabled','disabled');
+			$("#btnUpdate").removeAttr('disabled');
+			$("#btnDelete").removeAttr('disabled');
+			$('#KubunEditDlg').dialog('open');
+		}
+	});
+}
+<!--/* 登録処理 */-->
+function insertKubun(){
+	if (!checkInput()) return;
+	var params = createParams();
+	MJSAJAX.exec({
+		url:"insertKubun", cache:false, dataType:"json", data:params,
+		success: function(data) {
+			alert('登録しました。');
+			$('#KubunEditDlg').dialog('close');
+			<!--/* 区分種別リストの再生成 */-->
+			var kubunType = $("#selectKubunType").val();
+			$("#selectKubunType").empty();
+			for (i = 0; i < data.kubunTypeList.length; i++) {
+				var buf = "<option value='%val'>%text</option>"
+							.replace('%val',data.kubunTypeList[i].code)
+							.replace('%text',data.kubunTypeList[i].name);
+				$("#selectKubunType").append(buf);
+			}
+			$("#selectKubunType").val( kubunType );
+			searchKubun();
+		}
+	});
+}
+<!--/* 更新処理 */-->
+function updateKubun(){
+	if (!checkInput()) return;
+	var params = createParams();
+	MJSAJAX.exec({
+		url:"updateKubun", cache:false, dataType:"json", data:params,
+		success: function(data) {
+			alert('更新しました。');
+			$('#KubunEditDlg').dialog('close');
+			searchKubun();
+		}
+	});
+}
+<!--/* 削除処理 */-->
+function deleteKubun(){
+	if (!checkInput()) return;
+	var params = createParams();
+	MJSAJAX.exec({
+		url:"deleteKubun", cache:false, dataType:"json", data:params,
+		success: function(data) {
+			alert('削除しました。');
+			$('#KubunEditDlg').dialog('close');
+			searchKubun();
+		}
+	});
+}
+<!--/* クリア処理 */-->
+function clearKubun(){
+	$("#inputCode").val('');
+	$("#inputName").val('');
+}
+<!--/* 送信パラメータ生成 */-->
+function createParams() {
+	var params = {};
+	params['inputSeq'] = $("#inputSeq").val();
+	params['inputTypeCode'] = $("#inputTypeCode").text();
+	params['inputTypeName'] = $("#inputTypeName").text();
+	params['inputCode'] = $("#inputCode").val();
+	params['inputName'] = $("#inputName").val();
+	params['inputVersion'] = $("#inputVersion").val();
+	return params;
+}
+<!--/* 入力チェック */-->
+function checkInput() {
+	var ret = true;
+	var required = [
+	    			{item: "inputCode", name: "区分コード"},
+	    			{item: "inputName", name: "区分名"}
+	    	];
+	    	for (i = 0; i < required.length; i++) {
+	    		var val = $('#'+required[i].item).val();
+	    		if (!val || val.length == 0) {
+	    			$('#'+required[i].item).addClass('errorItem');
+	    			$('#'+required[i].item).after("<span class='errorMessage'><br/>「"+required[i].name+"」は必須です。</span>");
+	    			ret = false;
+	    		}
+	    	}
+
+	return ret;
+}
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="layout">
+	<div id="content_body" >
+		<div id="content">
+			<!-- メインコンテンツ設定欄 -->
+			<div align="center" layout:fragment="content">
+
+<div style="margin: 10px;">
+	<form method="post" action="/send">
+
+		<!--/* 検索条件部 */-->
+		<div class="small" style="margin: 10px 0px;">
+			<span>区分種別：</span>
+			<span>
+				<select id="selectKubunType">
+					<option th:each="kubunType : ${form.kubunTypeList}" th:value="${kubunType.code}" th:inline="text">[[${kubunType.name}]]</option>
+				</select>
+			</span>
+		</div>
+
+		<!--/* 一覧部 */-->
+		<div class="small">
+			<div style="float: right;">
+				<span><a href="#" id="openEditDialog">区分追加</a></span>
+			</div>
+			<span>件数：</span>
+			<span id="kubunCount"></span>
+			<span>件</span>
+			<div id="tbl_out">
+			<div id="tbl_in">
+			<table id="scr_tbl">
+				<thead id="kubunListHeader">
+					<tr>
+						<td style="width: 20px;">&nbsp;</td>
+						<td class="center" style="width: 60px;">区分番号</td>
+						<td class="center" style="width: 100px;">区分種別コード</td>
+						<td style="width: 200px;">区分種別名</td>
+						<td class="center" style="width: 80px;">区分コード</td>
+						<td style="width: 200px;">区分名</td>
+						<td style="width: 30px;">削除</td>
+					</tr>
+				</thead>
+				<!--/* 一覧出力領域 */-->
+				<tbody id="kubunListArea" th:include="mtf/mtf010list :: #kubunListArea"></tbody>
+			</table>
+			</div>
+			</div>
+		</div>
+
+<div id="KubunEditDlg" class="small" style="background-color: palegreen; margin-top: 15px;">
+	<input type="hidden" id="inputSeq" />
+	<input type="hidden" id="inputVersion" />
+	<table>
+		<tr>
+			<td><span>区分種別コード</span></td>
+			<td><span id="inputTypeCode"></span></td>
+		</tr>
+		<tr>
+			<td><span>区分種別名</span></td>
+			<td><span id="inputTypeName"></span></td>
+		</tr>
+		<tr>
+			<td><span class="requiredItem">区分コード</span></td>
+			<td><input type="text" id="inputCode" /></td>
+		</tr>
+		<tr>
+			<td><span class="requiredItem">区分名</span></td>
+			<td><input type="text" id="inputName" /></td>
+		</tr>
+	</table>
+	<div style="margin: 5px; padding-left: 15px;">
+		<input type="button" id="btnInsert" value="登録"/>
+		<input type="button" id="btnUpdate" value="更新"/>
+		<input type="button" id="btnDelete" value="削除"/>
+		<button id="btnClear">クリア</button>
+	</div>
+</div>
+
+	</form>
+</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
