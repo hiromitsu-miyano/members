@@ -34,4 +34,5 @@ public class MTF010Form implements Serializable {
 	private String inputName;
     /** 入力:バージョン. */
 	private Integer inputVersion;
+
 }

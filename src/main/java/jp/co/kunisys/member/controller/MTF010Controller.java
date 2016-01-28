@@ -31,6 +31,15 @@ public class MTF010Controller {
 
 
     /**
+     * フォームの生成
+     * @return フォーム
+     */
+    public MTF010Form createForm() {
+    	return new MTF010Form();
+    }
+
+
+    /**
      * 初期処理
      * @param form フォーム
      * @return 自画面

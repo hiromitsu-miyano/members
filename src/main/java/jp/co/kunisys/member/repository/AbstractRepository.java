@@ -91,6 +91,11 @@ public abstract class AbstractRepository<T> extends NamedParameterJdbcDaoSupport
 		f1.setAccessible(true);
 		f2.setAccessible(true);
 		try {
+			Object val1 = f1.get(entity1);
+			Object val2 = f2.get(entity2);
+			if (val1 == null || val2 == null) {
+				return false;
+			} else
 			if (f1.get(entity1).equals(f2.get(entity2))) {
 				return true;
 			}

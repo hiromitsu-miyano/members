@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import jp.co.kunisys.member.common.BeanMap;
 import jp.co.kunisys.member.entity.Kubun;
@@ -17,7 +16,6 @@ import jp.co.kunisys.member.security.LoginUser;
 /**
  * 区分メンテナンス画面サービス
  */
-@Transactional
 @Service
 public class MTF010Service {
 

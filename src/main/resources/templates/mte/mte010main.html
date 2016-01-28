@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
+<head>
+<title th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}">勤務先マスタメンテナンス</title>
+<style type="text/css">
+<!--
+form span, form td { font-size: small; }
+thead { background-color: mediumseagreen; }
+thead tr td { border-style: solid; border-width: 0px; padding: 3px; }
+#workplaceListHeader td { color: white; }
+.oddRecord { background-color: palegreen; }
+.evenRecord { background-color: lightgreen; }
+.errorItem { background-color: pink; }
+.selectRecord { background-color: aquamarine; }
+-->
+</style>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+var sortColumn = 'workplaceId';
+var sortOrder = "ASC";
+
+<!--/* イベント処理 */-->
+$(function(){
+	$("form").on("dblclick", "#workplaceListArea tr", function(){
+		$("input[name='inWorkplaceId']").val(this.id);
+		var act = /*[[@{/MTE010/selectWorkplace}]]*/ '#'
+		$("form").attr("action", act);
+		$("form").submit();
+	});
+
+});
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="layout">
+	<div id="content_body" >
+		<div id="content">
+			<!-- メインコンテンツ設定欄 -->
+			<div align="center" layout:fragment="content">
+
+<div style="margiin: 10px;">
+<form th:action="@{/MTE010}">
+<!--/* フォーム開始 */-->
+
+<!--/* 一覧部 */-->
+<div>	<span style="margin-left: 10px;">件数：</span>
+	<span id="workplaceCount"></span>
+	<span style="margin-right: 10px;">件</span>
+	<table style="border-collapse: collapse; width: 100%;">
+		<thead id="workplaceListHeader">
+			<tr>
+				<td style="width: 15px;">&nbsp;</td>
+				<td style="width: 90px;">勤務先ID</td>
+				<td style="width: 30px;">区分</td>
+				<td style="width: 200px;">勤務先名</td>
+				<td style="width: 30px;">削除</td>
+				<td>備考</td>
+			</tr>
+		</thead>
+		<!--/* 一覧出力領域 */-->
+		<tbody id="workplaceListArea">
+            <tr th:each="rec,status : ${form.workplaceList}" th:id="${rec.workplaceId }" th:class="${(status.count % 2 == 1) ? 'oddRecord' : 'evenRecord'}">
+                <td>&nbsp;</td>
+                <td th:text="${rec.workplaceId}"></td>
+                <td th:text="${rec.workplaceTypeName}"></td>
+                <td th:text="${rec.name}"></td>
+                <td th:text="${(rec.deleted == null) ? '' : '○'}"></td>
+                <td th:text="${rec.remark}"></td>
+            </tr>
+		</tbody>
+	</table>
+</div>
+
+<!--/* 勤務先編集部 */-->
+<div id="workplaceEdit" style="background-color: palegreen; margin-top: 15px;">
+	<div style="background-color: mediumseagreen; padding-left: 15px;">
+		<span style="color: white;">編集欄</span>
+	</div>
+	<div style="margin-left: 15px;">
+		<div id="viehWorkplaceId" style="width: 90px; float: left;">&nbsp;</div>
+		<!--/* 勤務先ID */-->
+		<input type="hidden" name="inWorkplaceId" th:field="${form.inWorkplaceId}"/>
+        <!--/* 勤務先区分 */-->
+        <select name="inWorkplaceType" th:field="${form.inWorkplaceType}">
+          <option value=""></option>
+          <option th:each="rec : ${form.typeList}" th:value="${rec.code}" th:text="${rec.name}"></option>
+        </select>
+		<!--/* 勤務先名 */-->
+		<input type="text" name="inName" style="width: 200px;" th:field="${form.inName}"/>
+		<label><input type="checkbox" name="inDelete" th:field="${form.inDelete}"/>&nbsp;削除</label>
+		<!--/* 備考 */-->
+		<input type="text" name="inRemark" th:field="${form.inRemark}"/>
+		<!--/* バージョン */-->
+		<input type="hidden" name="inVersion" th:field="${form.inVersion}"/>
+	</div>
+	<div style="margin: 5px; padding-left: 15px;">
+		<input type="submit" name="insertWorkplace" value="登録" th:disabled="${form.inWorkplaceId != null}"/>
+		<input type="submit" name="updateWorkplace" value="更新" th:disabled="${form.inWorkplaceId == null}"/>
+		<input type="submit" name="init" value="クリア"/>
+	</div>
+</div>
+
+<!--/* フォーム終了 */-->
+</form>
+</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
