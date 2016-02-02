@@ -1,13 +1,17 @@
 package jp.co.kunisys.member.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.WebApplicationContext;
 
+import jp.co.kunisys.member.bean.BreadCrumbBean;
 import jp.co.kunisys.member.common.BeanMap;
 import jp.co.kunisys.member.form.MTF010Form;
 import jp.co.kunisys.member.repository.KubunRepository;
@@ -17,8 +21,14 @@ import jp.co.kunisys.member.service.MTF010Service;
  * 区分メンテナンス画面コントローラ
  */
 @Controller
+@Scope(WebApplicationContext.SCOPE_REQUEST)
 @RequestMapping(value = "/MTF010")
-public class MTF010Controller {
+public class MTF010Controller extends AbstractController {
+
+    /** 画面名. */
+    public static final String NAME = "区分マスタメンテナンス";
+    /** 初期処理 */
+    public static final String INIT = "/MTF010/init";
 
     /** 自画面JSP. */
     private static final String MY_VIEW = "mtf/mtf010kubunedit";
@@ -31,9 +41,22 @@ public class MTF010Controller {
 
 
     /**
+     * コンストラクタ
+     */
+    public MTF010Controller() {
+		//パン屑リスト生成
+    	this.breadCrumbTrails = new ArrayList<>();
+    	this.breadCrumbTrails.add(new BreadCrumbBean(COB000Controller.NAME, COB000Controller.INIT));
+    	//画面名設定
+    	this.viewName = NAME;
+	}
+
+
+    /**
      * フォームの生成
      * @return フォーム
      */
+    @ModelAttribute("form")
     public MTF010Form createForm() {
     	return new MTF010Form();
     }

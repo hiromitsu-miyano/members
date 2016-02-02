@@ -1,12 +1,16 @@
 package jp.co.kunisys.member.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.context.WebApplicationContext;
 
+import jp.co.kunisys.member.bean.BreadCrumbBean;
 import jp.co.kunisys.member.form.MTE010Form;
 import jp.co.kunisys.member.service.MTE010Service;
 
@@ -14,10 +18,15 @@ import jp.co.kunisys.member.service.MTE010Service;
  * 勤務先メンテナンス画面コントローラ
  */
 @Controller
-@Scope("prototype")
+@Scope(WebApplicationContext.SCOPE_REQUEST)
 @RequestMapping(value = "/MTE010")
 @SessionAttributes(value = "form")
 public class MTE010Controller extends AbstractController {
+
+    /** 画面名. */
+    public static final String NAME = "勤務先編集";
+    /** 初期処理 */
+    public static final String INIT = "/MTE010/init";
 
     /** 自画面テンプレート */
     private static final String MY_VIEW = "mte/mte010main";
@@ -27,6 +36,18 @@ public class MTE010Controller extends AbstractController {
     /** サービスクラス */
     @Autowired
     private MTE010Service mte010Service;
+
+
+    /**
+     * コンストラクタ
+     */
+    public MTE010Controller() {
+		//パン屑リスト生成
+    	this.breadCrumbTrails = new ArrayList<>();
+    	this.breadCrumbTrails.add(new BreadCrumbBean(COB000Controller.NAME, COB000Controller.INIT));
+    	//画面名設定
+    	this.viewName = NAME;
+	}
 
 
     /**

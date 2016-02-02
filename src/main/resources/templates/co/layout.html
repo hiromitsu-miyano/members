@@ -191,6 +191,16 @@ $(function(){
 				</li>
 			</ul>
 		</div>
+		<!--/* パンくずリスト */-->
+		<div id="header_breadcrumb_trails">
+		  <th:block th:each="rec,status : ${trails}">
+			<a href="#" th:href="@{${rec.action}}">
+				<span style="vertical-align: middle; color: white;" th:text="${rec.name}"/>
+			</a>
+			<span style="vertical-align:middle; color:white;"> &gt; </span>
+		  </th:block>
+			<span style="vertical-align: middle; color: white;" th:text="${viewName}"/>
+		</div>
 	</div>
 	<div id="content_body" >
 		<div id="content">
