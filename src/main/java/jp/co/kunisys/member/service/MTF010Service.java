@@ -1,15 +1,17 @@
 package jp.co.kunisys.member.service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jp.co.kunisys.member.common.BeanMap;
-import jp.co.kunisys.member.entity.Kubun;
 import jp.co.kunisys.member.form.MTF010Form;
+import jp.co.kunisys.member.query.Tables;
+import jp.co.kunisys.member.query.tables.records.KubunRecord;
 import jp.co.kunisys.member.repository.KubunRepository;
 import jp.co.kunisys.member.security.LoginUser;
 
@@ -23,23 +25,24 @@ public class MTF010Service {
 	@Autowired
 	private KubunRepository kubunRepository;
 
+	/** DSLContext */
+	@Autowired
+	private DSLContext create;
 
 	/**
 	 * 区分種別のリストを返却する
 	 * @return 区分種別リスト
 	 */
 	public List<BeanMap> createKubunTypeList() {
-		List<Kubun> entityList = this.kubunRepository.findKubunList(KubunRepository.KUBUN_TYPE_ROOT);
+		List<KubunRecord> recList = this.kubunRepository.findKubunList(KubunRepository.KUBUN_TYPE_ROOT);
 
-		List<BeanMap> kubunTypeList = new ArrayList<>();
-		for (Kubun entity : entityList) {
-			BeanMap map = new BeanMap();
-			map.put("code", entity.getCode());
-			map.put("name", entity.getName());
-			kubunTypeList.add(map);
-		}
-
-		return kubunTypeList;
+		return recList.stream()
+						.map(r -> {
+							BeanMap map = new BeanMap();
+							map.put("code", r.getCode());
+							map.put("name", r.getName());
+							return map;
+						}).collect(Collectors.toList());
 	}
 
 
@@ -49,21 +52,20 @@ public class MTF010Service {
      */
     public void searchKubunList(MTF010Form form) {
     	//区分一覧の検索
-        List<Kubun> entityList = this.kubunRepository.findKubunList(form.getSelectKubunType());
+        List<KubunRecord> recList = this.kubunRepository.findKubunList(form.getSelectKubunType());
         //Mapに格納
-        List<BeanMap> kubunList = new ArrayList<BeanMap>();
-        for (Kubun entity : entityList) {
-            BeanMap map = new BeanMap();
-            map.put("seq", entity.getSeq());
-            map.put("typeCode", entity.getTypeCode());
-            map.put("typeName", entity.getTypeName());
-            map.put("code", entity.getCode());
-            map.put("name", entity.getName());
-            map.put("deleted", entity.getDeletedUser());
-            map.put("version", entity.getVersion());
-            kubunList.add(map);
-        }
-
+        List<BeanMap> kubunList = recList.stream()
+        							.map(r -> {
+        					            BeanMap map = new BeanMap();
+        					            map.put("seq", r.getSeq());
+        					            map.put("typeCode", r.getTypeCode());
+        					            map.put("typeName", r.getTypeName());
+        					            map.put("code", r.getCode());
+        					            map.put("name", r.getName());
+        					            map.put("deleted", r.getDeletedUser());
+        					            map.put("version", r.getVersion());
+        					            return map;
+        							}).collect(Collectors.toList());
         form.setKubunList(kubunList);
     }
 
@@ -74,19 +76,19 @@ public class MTF010Service {
      */
     public void selectKubun(MTF010Form form) {
 
-    	Kubun entity = this.kubunRepository.findById(form.getSelectSeq());
+    	KubunRecord rec = this.kubunRepository.findById(form.getSelectSeq());
     	//区分番号
-    	form.setInputSeq(entity.getSeq());
+    	form.setInputSeq(rec.getSeq());
     	//区分種別コード
-    	form.setInputTypeCode(entity.getTypeCode());
+    	form.setInputTypeCode(rec.getTypeCode());
     	//区分種別名
-    	form.setInputTypeName(entity.getTypeName());
+    	form.setInputTypeName(rec.getTypeName());
     	//区分コード
-    	form.setInputCode(entity.getCode());
+    	form.setInputCode(rec.getCode());
     	//区分名
-    	form.setInputName(entity.getName());
+    	form.setInputName(rec.getName());
     	//バージョン
-    	form.setInputVersion(entity.getVersion());
+    	form.setInputVersion(rec.getVersion());
     }
 
 
@@ -97,31 +99,32 @@ public class MTF010Service {
     public void insertKubun(MTF010Form form) {
     	Timestamp ts = new Timestamp(System.currentTimeMillis());
 
-    	Kubun entity = new Kubun();
-    	//区分番号
     	int seq = this.kubunRepository.findMaxNumber() + 1;
-    	entity.setSeq(seq);
+
+    	KubunRecord rec = this.create.newRecord(Tables.KUBUN);
+    	//区分番号
+    	rec.setSeq(seq);
     	//区分種別コード
-    	entity.setTypeCode(form.getInputTypeCode());
+    	rec.setTypeCode(form.getInputTypeCode());
     	//区分種別名
-    	entity.setTypeName(form.getInputTypeName());
+    	rec.setTypeName(form.getInputTypeName());
     	//区分コード
-    	entity.setCode(form.getInputCode());
+    	rec.setCode(form.getInputCode());
     	//区分名
-    	entity.setName(form.getInputName());
+    	rec.setName(form.getInputName());
     	//登録日時
-    	entity.setCreated(ts);
+    	rec.setCreated(ts);
     	//登録ユーザ
-    	entity.setCreatedUser(LoginUser.getUser().getUserId());
+    	rec.setCreatedUser(LoginUser.getUser().getUserId());
     	//更新日時
-    	entity.setUpdated(ts);
+    	rec.setUpdated(ts);
     	//更新ユーザ
-    	entity.setUpdatedUser(LoginUser.getUser().getUserId());
+    	rec.setUpdatedUser(LoginUser.getUser().getUserId());
     	//バージョン
-    	entity.setVersion(1);
+    	rec.setVersion(1);
 
     	//登録処理
-    	this.kubunRepository.insert(entity);
+    	rec.store();
     }
 
 
@@ -132,24 +135,24 @@ public class MTF010Service {
     public void updateKubun(MTF010Form form) {
     	Timestamp ts = new Timestamp(System.currentTimeMillis());
 
-    	Kubun entity = this.kubunRepository.findById(form.getInputSeq());
-    	if (entity == null) {
+    	KubunRecord rec = this.kubunRepository.findById(form.getInputSeq());
+    	if (rec == null) {
     		return;
     	}
 
     	//区分コード
-    	entity.setCode(form.getInputCode());
+    	rec.setCode(form.getInputCode());
     	//区分名
-    	entity.setName(form.getInputName());
+    	rec.setName(form.getInputName());
     	//更新日時
-    	entity.setUpdated(ts);
+    	rec.setUpdated(ts);
     	//更新ユーザ
-    	entity.setUpdatedUser(LoginUser.getUser().getUserId());
+    	rec.setUpdatedUser(LoginUser.getUser().getUserId());
     	//バージョン
-    	entity.setVersion(form.getInputVersion());
+    	rec.setVersion(form.getInputVersion());
 
     	//更新処理
-    	this.kubunRepository.update(entity);
+    	rec.store();
     }
 
 
@@ -160,19 +163,19 @@ public class MTF010Service {
     public void deleteKubun(MTF010Form form) {
     	Timestamp ts = new Timestamp(System.currentTimeMillis());
 
-    	Kubun entity = this.kubunRepository.findById(form.getInputSeq());
-    	if (entity == null) {
+    	KubunRecord rec = this.kubunRepository.findById(form.getInputSeq());
+    	if (rec == null) {
     		return;
     	}
 
     	//削除日時
-    	entity.setDeleted(ts);
+    	rec.setDeleted(ts);
     	//削除ユーザ
-    	entity.setDeletedUser(LoginUser.getUser().getUserId());
+    	rec.setDeletedUser(LoginUser.getUser().getUserId());
     	//バージョン
-    	entity.setVersion(form.getInputVersion());
+    	rec.setVersion(form.getInputVersion());
 
     	//更新処理(論理削除)
-    	this.kubunRepository.update(entity);
+    	rec.store();
     }
 }

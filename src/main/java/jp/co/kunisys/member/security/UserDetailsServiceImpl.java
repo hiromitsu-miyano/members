@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import jp.co.kunisys.member.entity.UserInfo;
+import jp.co.kunisys.member.query.tables.records.UserInfoRecord;
 import jp.co.kunisys.member.repository.UserInfoRepository;
 
 /**
@@ -28,7 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		List<UserInfo> userList = this.userInfoRepository.findByAccount(username);
+		List<UserInfoRecord> userList = this.userInfoRepository.findByAccount(username);
 		if (userList.isEmpty()) {
 			throw new UsernameNotFoundException("ユーザが見つかりません。");
 		}

@@ -2,39 +2,33 @@ package jp.co.kunisys.member.repository;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import jp.co.kunisys.member.entity.UserInfo;
+import jp.co.kunisys.member.query.Tables;
+import jp.co.kunisys.member.query.tables.records.UserInfoRecord;
 
 /**
  * ユーザ情報リポジトリ
  */
 @Repository
-public class UserInfoRepository extends AbstractRepository<UserInfo> {
+public class UserInfoRepository {
 
-	/**
-	 * コンストラクタ
-	 * @param ds データソース
-	 */
+	/** DSLContext */
 	@Autowired
-	public UserInfoRepository(DataSource ds) {
-		setDataSource(ds);
-	}
+	private DSLContext create;
+
 
 	/**
 	 * ユーザ情報取得
 	 * @param userId ユーザID
 	 * @return ユーザ情報
 	 */
-	public UserInfo findById(Integer userId) {
-		//パラメータ生成
-		UserInfo entity = new UserInfo();
-		entity.setUserId(userId);
-		//実行
-		return findOneById(entity);
+	public UserInfoRecord findById(Integer userId) {
+		return this.create.selectFrom(Tables.USER_INFO)
+							.where(Tables.USER_INFO.USER_ID.eq(userId))
+							.fetchOne();
 	}
 
 	/**
@@ -42,11 +36,9 @@ public class UserInfoRepository extends AbstractRepository<UserInfo> {
 	 * @param account アカウント
 	 * @return ユーザ情報リスト
 	 */
-	public List<UserInfo> findByAccount(String account) {
-		//パラメータ生成
-		UserInfo entity = new UserInfo();
-		entity.setAccount(account);
-		//実行
-		return findByParam(entity);
+	public List<UserInfoRecord> findByAccount(String account) {
+		return this.create.selectFrom(Tables.USER_INFO)
+							.where(Tables.USER_INFO.ACCOUNT.eq(account))
+							.fetch();
 	}
 }

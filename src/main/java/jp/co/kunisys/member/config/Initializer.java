@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 import jp.co.kunisys.member.common.Code;
 import jp.co.kunisys.member.common.Constants;
 import jp.co.kunisys.member.common.SUtil;
-import jp.co.kunisys.member.entity.AppInfo;
-import jp.co.kunisys.member.entity.Kubun;
+import jp.co.kunisys.member.query.tables.records.AppInfoRecord;
+import jp.co.kunisys.member.query.tables.records.KubunRecord;
 import jp.co.kunisys.member.repository.AppInfoRepository;
 import jp.co.kunisys.member.repository.KubunRepository;
 
@@ -42,6 +42,9 @@ public class Initializer implements CommandLineRunner {
 	/** 区分マスタリポジトリ */
 	@Autowired
 	private KubunRepository kubunRepository;
+	/** JOOQ設定クラス */
+	@Autowired
+	private org.jooq.Configuration jooqConfig;
 
 
 	/**
@@ -49,6 +52,9 @@ public class Initializer implements CommandLineRunner {
 	 */
 	@Override
 	public void run(String... args) throws Exception {
+		//JOOQ の排他制御を有効にする
+		this.jooqConfig.settings().withExecuteWithOptimisticLocking(true);
+
 		//バージョン番号の読込
 		loadVersionNumber();
 		//定数クラスの初期化処理
@@ -94,38 +100,40 @@ public class Initializer implements CommandLineRunner {
 	private void initAppInfo() {
 		logger.info("定数クラス設定開始");
 		//アプリケーション設定を取得
-		List<AppInfo> entityList = this.appInfoRepository.findAllOrderById();
+		List<AppInfoRecord> recList = this.appInfoRepository.findAllOrderById();
 		//定数クラスフィールドを全走査
 		for (Field f : Constants.class.getFields()) {
 			//フィールド毎にアプリケーション設定を検索
-			Optional<AppInfo> opt = entityList.stream()
-					.filter(e -> SUtil.equals(e.getAppKey(), f.getName())).findFirst();
+			Optional<AppInfoRecord> opt = recList.stream()
+					.filter(b -> SUtil.equals(b.getAppKey(), f.getName()))
+					.findFirst();
 			if (opt.isPresent()) {
-				AppInfo entity = opt.get();
+				//AppInfo entity = opt.get();
+				AppInfoRecord rec = opt.get();
 				//値の型情報がない場合は読み飛ばし
-				if (SUtil.isBlank(entity.getTypeOf())) {
-					logger.warn("アプリケーション設定テーブルの値の型情報が設定されていません。[%s]", entity.getAppKey());
+				if (SUtil.isBlank(rec.getTypeOf())) {
+					logger.warn("アプリケーション設定テーブルの値の型情報が設定されていません。[%s]", rec.getAppKey());
 					continue;
 				}
 
 				try {
-					switch (entity.getTypeOf()) {
+					switch (rec.getTypeOf()) {
 					case Constants.ValueType.INI_VAL_STRING:
-						f.set(null, entity.getAppValue());
+						f.set(null, rec.getAppValue());
 						break;
 					case Constants.ValueType.INI_VAL_INT:
 					case Constants.ValueType.INI_VAL_INTEGER:
-						f.set(null, Integer.valueOf(entity.getAppValue()));
+						f.set(null, Integer.valueOf(rec.getAppValue()));
 						break;
 					case Constants.ValueType.INI_VAL_DOUBLE:
-						f.set(null, Double.valueOf(entity.getAppValue()));
+						f.set(null, Double.valueOf(rec.getAppValue()));
 						break;
 					case Constants.ValueType.INI_VAL_BOOLEAN:
-						f.set(null, Boolean.parseBoolean(entity.getAppValue()));
+						f.set(null, Boolean.parseBoolean(rec.getAppValue()));
 						break;
 					}
 				} catch (IllegalAccessException ex) {
-					logger.warn("アプリケーション設定テーブルの定数クラスへの設定に失敗しました。[%s]", entity.getAppKey());
+					logger.warn("アプリケーション設定テーブルの定数クラスへの設定に失敗しました。[%s]", rec.getAppKey());
 				}
 			}
 		}
@@ -140,7 +148,7 @@ public class Initializer implements CommandLineRunner {
 	private void initCode() {
 		logger.info("コード(区分マスタ)読込開始");
 
-		List<Kubun> entityList = this.kubunRepository.findAllOrderById();
+		List<KubunRecord> entityList = this.kubunRepository.findAllOrderById();
 		Code.setCodeList(entityList);
 
 		logger.info("コード(区分マスタ)読込終了");

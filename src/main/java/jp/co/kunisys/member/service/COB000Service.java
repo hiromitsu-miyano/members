@@ -1,5 +1,6 @@
 package jp.co.kunisys.member.service;
 
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +14,11 @@ public class COB000Service {
 	@Autowired
 	private TopMessageRepository topMessageRepository;
 
+	@Autowired
+	private DSLContext create;
+
 	public void searchMessageListLimit() {
-		this.topMessageRepository.findAll();
+		this.topMessageRepository.findAllOrderById();
 	}
 
 	/**

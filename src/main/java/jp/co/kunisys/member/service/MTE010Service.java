@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +12,9 @@ import jp.co.kunisys.member.common.BeanMap;
 import jp.co.kunisys.member.common.BeanUtil;
 import jp.co.kunisys.member.common.Code;
 import jp.co.kunisys.member.common.DUtil;
-import jp.co.kunisys.member.entity.Workplace;
 import jp.co.kunisys.member.form.MTE010Form;
+import jp.co.kunisys.member.query.Tables;
+import jp.co.kunisys.member.query.tables.records.WorkplaceRecord;
 import jp.co.kunisys.member.repository.WorkplaceRepository;
 import jp.co.kunisys.member.security.LoginUser;
 
@@ -26,6 +28,10 @@ public class MTE010Service {
 	@Autowired
 	private WorkplaceRepository workplaceRepository;
 
+	/** DSLContext */
+	@Autowired
+	private DSLContext create;
+
 
 	/**
 	 * 勤務先リストの検索処理
@@ -33,12 +39,12 @@ public class MTE010Service {
 	 */
 	public void sarchWorkplaceList(MTE010Form form) {
 
-		List<Workplace> entityList = this.workplaceRepository.findAllOrderById();
-		List<BeanMap> mapList = entityList.stream()
-				.map(e -> {
+		List<WorkplaceRecord> recList = this.workplaceRepository.findAllOrderById();
+		List<BeanMap> mapList = recList.stream()
+				.map(r -> {
 					BeanMap map = new BeanMap();
-					BeanUtil.copyProperties(e, map);
-					map.put("workplaceTypeName", Code.getName(Code.WORKPLACE_KUBUN.TYPE, e.getWorkplaceType()));
+					BeanUtil.copyProperties(r, map);
+					map.put("workplaceTypeName", Code.getName(Code.WORKPLACE_KUBUN.TYPE, r.getWorkplaceType()));
 					return map;
 				})
 				.collect(Collectors.toList());
@@ -51,8 +57,8 @@ public class MTE010Service {
 	 * @param form フォーム
 	 */
 	public void selectWorkplace(MTE010Form form) {
-		Workplace entity = this.workplaceRepository.findById(form.getInWorkplaceId());
-		if (entity == null) {
+		WorkplaceRecord rec = this.workplaceRepository.findById(form.getInWorkplaceId());
+		if (rec == null) {
 			//勤務先ID
 			form.setInWorkplaceId(null);
 			//勤務先名
@@ -67,17 +73,17 @@ public class MTE010Service {
 			form.setInVersion(1);
 		} else {
 			//勤務先ID
-			form.setInWorkplaceId(entity.getWorkplaceId());
+			form.setInWorkplaceId(rec.getWorkplaceId());
 			//勤務先名
-			form.setInName(entity.getName());
+			form.setInName(rec.getName());
 			//勤務先区分
-			form.setInWorkplaceType(entity.getWorkplaceType());
+			form.setInWorkplaceType(rec.getWorkplaceType());
 			//備考
-			form.setInRemark(entity.getRemark());
+			form.setInRemark(rec.getRemark());
 			//削除
-			form.setInDelete(entity.getDeleted() != null);
+			form.setInDelete(rec.getDeleted() != null);
 			//バージョン
-			form.setInVersion(entity.getVersion());
+			form.setInVersion(rec.getVersion());
 		}
 	}
 
@@ -89,29 +95,29 @@ public class MTE010Service {
 	public void insertWorkplace(MTE010Form form) {
 		Timestamp now = DUtil.getTimestamp();
 
-		Workplace entity = new Workplace();
+		WorkplaceRecord rec = this.create.newRecord(Tables.WORKPLACE);
 		//勤務先ID
 		Integer workplaceId = this.workplaceRepository.createWorkplaceId();
-		entity.setWorkplaceId(workplaceId);
+		rec.setWorkplaceId(workplaceId);
 		//勤務先名
-		entity.setName(form.getInName());
+		rec.setName(form.getInName());
 		//勤務先区分
-		entity.setWorkplaceType(form.getInWorkplaceType());
+		rec.setWorkplaceType(form.getInWorkplaceType());
 		//備考
-		entity.setRemark(form.getInRemark());
+		rec.setRemark(form.getInRemark());
 		//登録日時
-		entity.setCreated(now);
+		rec.setCreated(now);
 		//登録ユーザ
-		entity.setCreatedUser(LoginUser.getUser().getUserId());
+		rec.setCreatedUser(LoginUser.getUser().getUserId());
 		//更新日時
-		entity.setUpdated(now);
+		rec.setUpdated(now);
 		//更新ユーザ
-		entity.setUpdatedUser(LoginUser.getUser().getUserId());
+		rec.setUpdatedUser(LoginUser.getUser().getUserId());
 		//バージョン
-		entity.setVersion(1);
+		rec.setVersion(1);
 
 		//登録処理
-		this.workplaceRepository.insert(entity);
+		rec.store();
 	}
 
 
@@ -122,28 +128,28 @@ public class MTE010Service {
 	public void updateWorkplace(MTE010Form form) {
 		Timestamp now = DUtil.getTimestamp();
 
-		Workplace entity = this.workplaceRepository.findById(form.getInWorkplaceId());
+		WorkplaceRecord rec = this.workplaceRepository.findById(form.getInWorkplaceId());
 		//勤務先名
-		entity.setName(form.getInName());
+		rec.setName(form.getInName());
 		//勤務先区分
-		entity.setWorkplaceType(form.getInWorkplaceType());
+		rec.setWorkplaceType(form.getInWorkplaceType());
 		//備考
-		entity.setRemark(form.getInRemark());
+		rec.setRemark(form.getInRemark());
 		//更新日時
-		entity.setUpdated(now);
+		rec.setUpdated(now);
 		//更新ユーザ
-		entity.setUpdatedUser(LoginUser.getUser().getUserId());
+		rec.setUpdatedUser(LoginUser.getUser().getUserId());
 		//削除日時 (削除チェックONの場合)
 		Timestamp deleted = form.isInDelete() ? now : null;
-		entity.setDeleted(deleted);
+		rec.setDeleted(deleted);
 		//削除ユーザ (削除チェックONの場合)
-		Integer deletedUser = form.isInDelete() ? entity.getUpdatedUser() : null;
-		entity.setDeletedUser(deletedUser);
+		Integer deletedUser = form.isInDelete() ? rec.getUpdatedUser() : null;
+		rec.setDeletedUser(deletedUser);
 		//バージョン
-		entity.setVersion(form.getInVersion());
+		rec.setVersion(form.getInVersion());
 
 		//更新処理
-		this.workplaceRepository.update(entity);
+		rec.store();
 	}
 
 }

@@ -13,7 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import jp.co.kunisys.member.entity.UserInfo;
+import jp.co.kunisys.member.query.tables.records.UserInfoRecord;
 import jp.co.kunisys.member.repository.UserInfoRepository;
 
 /**
@@ -42,12 +42,12 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
 			throw new AuthenticationCredentialsNotFoundException("ログイン情報に不備があります。");
 		}
 
-		List<UserInfo> userList = this.userInfoRepository.findByAccount(account);
+		List<UserInfoRecord> userList = this.userInfoRepository.findByAccount(account);
 		if (userList.isEmpty()) {
 			throw new AuthenticationCredentialsNotFoundException("ログイン情報に不備があります。");
 		}
 
-		UserInfo user = userList.get(0);
+		UserInfoRecord user = userList.get(0);
 		if (!password.equals(user.getPassword())) {
 			throw new AuthenticationCredentialsNotFoundException("ログイン情報に不備があります。");
 		}

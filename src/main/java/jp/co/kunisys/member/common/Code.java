@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jp.co.kunisys.member.bean.CodeBean;
-import jp.co.kunisys.member.entity.Kubun;
+import jp.co.kunisys.member.query.tables.records.KubunRecord;
 
 /**
  * コードクラス
@@ -30,7 +30,7 @@ public class Code {
 	}
 
 	/** コードリスト */
-	private static List<Kubun> codeList;
+	private static List<KubunRecord> codeList;
 
 	/**
 	 * コンストラクタ
@@ -42,7 +42,7 @@ public class Code {
 	 * コードリストを設定する
 	 * @param list コードリスト
 	 */
-	public static void setCodeList(List<Kubun> list) {
+	public static void setCodeList(List<KubunRecord> list) {
 		codeList = list;
 	}
 

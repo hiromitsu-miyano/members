@@ -1,38 +1,46 @@
 package jp.co.kunisys.member.repository;
 
-import javax.sql.DataSource;
+import static org.jooq.impl.DSL.*;
 
+import java.util.List;
+
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import jp.co.kunisys.member.entity.Workplace;
+import jp.co.kunisys.member.query.Tables;
+import jp.co.kunisys.member.query.tables.records.WorkplaceRecord;
 
 /**
  * 勤務先リポジトリ
  */
 @Repository
-public class WorkplaceRepository extends AbstractRepository<Workplace> {
+public class WorkplaceRepository {
+
+	/** DSLContext */
+	@Autowired
+	private DSLContext create;
+
 
 	/**
-	 * コンストラクタ
-	 * @param ds データソース
+	 * レコードを全件検索する。
+	 * @return レコードのリスト
 	 */
-	@Autowired
-	public WorkplaceRepository(DataSource ds) {
-		setDataSource(ds);
+	public List<WorkplaceRecord> findAllOrderById() {
+		return this.create.selectFrom(Tables.WORKPLACE)
+							.orderBy(Tables.WORKPLACE.WORKPLACE_ID)
+							.fetch();
 	}
-
 
 	/**
 	 * 主キーでエンティティを検索する
 	 * @param workplaceId 勤務先ID
 	 * @return エンティティ
 	 */
-	public Workplace findById(Integer workplaceId) {
-		Workplace param = new Workplace();
-		param.setWorkplaceId(workplaceId);
-		return findOneById(param);
+	public WorkplaceRecord findById(Integer workplaceId) {
+		return this.create.selectFrom(Tables.WORKPLACE)
+							.where(Tables.WORKPLACE.WORKPLACE_ID.eq(workplaceId))
+							.fetchOne();
 	}
 
 
@@ -41,8 +49,9 @@ public class WorkplaceRepository extends AbstractRepository<Workplace> {
 	 * @return 採番された勤務先ID
 	 */
 	public Integer createWorkplaceId() {
-		String sql = "select max(workplace_id) from workplace";
-		Integer maxId = getNamedParameterJdbcTemplate().queryForObject(sql, new EmptySqlParameterSource(), Integer.class);
+		Integer maxId = this.create.select(max(Tables.WORKPLACE.WORKPLACE_ID))
+									.from(Tables.WORKPLACE)
+									.fetchOneInto(Integer.class);
 		if (maxId == null) {
 			maxId = 0;
 		}

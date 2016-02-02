@@ -1,24 +1,32 @@
 package jp.co.kunisys.member.repository;
 
-import javax.sql.DataSource;
+import java.util.List;
 
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import jp.co.kunisys.member.entity.AppInfo;
+import jp.co.kunisys.member.query.Tables;
+import jp.co.kunisys.member.query.tables.records.AppInfoRecord;
 
 /**
  * アプリケーション設定リポジトリ
  */
 @Repository
-public class AppInfoRepository extends AbstractRepository<AppInfo> {
+public class AppInfoRepository {
+
+	/** DSLContext */
+	@Autowired
+	private DSLContext create;
+
 
 	/**
-	 * コンストラクタ
-	 * @param ds データソース
+	 * レコードを全件返す
+	 * @return レコードのリスト
 	 */
-	@Autowired
-	public AppInfoRepository(DataSource ds) {
-		setDataSource(ds);
+	public List<AppInfoRecord> findAllOrderById() {
+		return this.create.selectFrom(Tables.APP_INFO)
+							.orderBy(Tables.APP_INFO.APP_KEY)
+							.fetch();
 	}
 }

@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jp.co.kunisys.member.entity.UserInfo;
+import jp.co.kunisys.member.query.tables.records.UserInfoRecord;
 
 /**
  * 認証ユーザ情報
@@ -37,7 +37,7 @@ public class LoginUser implements UserDetails {
 	 * @param userInfo ユーザ情報
 	 * @param authorityList 権限リスト
 	 */
-	public LoginUser(UserInfo userInfo, List<? extends GrantedAuthority> authorityList) {
+	public LoginUser(UserInfoRecord userInfo, List<? extends GrantedAuthority> authorityList) {
 		this.userId = userInfo.getUserId();
 		this.username = String.format("%s %s", userInfo.getLastname(), userInfo.getFirstname());
 		this.password = userInfo.getPassword();

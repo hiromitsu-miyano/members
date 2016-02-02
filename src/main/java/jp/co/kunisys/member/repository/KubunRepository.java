@@ -1,20 +1,21 @@
 package jp.co.kunisys.member.repository;
 
+import static org.jooq.impl.DSL.*;
+
 import java.util.List;
 
-import javax.sql.DataSource;
-
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import jp.co.kunisys.member.entity.Kubun;
+import jp.co.kunisys.member.query.Tables;
+import jp.co.kunisys.member.query.tables.records.KubunRecord;
 
 /**
  * 区分リポジトリ
  */
 @Repository
-public class KubunRepository extends AbstractRepository<Kubun> {
+public class KubunRepository {
 
     /** 区分種別：区分種別. */
     public static final String KUBUN_TYPE_ROOT = "000";
@@ -36,14 +37,10 @@ public class KubunRepository extends AbstractRepository<Kubun> {
     /** 区分値：学校区分：大学院. */
     public static final String KUBUN_VALUE_SCHOOL_TYPE_DAIGAKUIN = "010";
 
-	/**
-	 * コンストラクタ
-	 * @param ds データソース
-	 */
-	@Autowired
-	public KubunRepository(DataSource ds) {
-		setDataSource(ds);
-	}
+
+    /** DSLContext */
+    @Autowired
+    private DSLContext create;
 
 
 	/**
@@ -51,10 +48,20 @@ public class KubunRepository extends AbstractRepository<Kubun> {
 	 * @param seq 区分番号
 	 * @return 区分
 	 */
-	public Kubun findById(Integer seq) {
-		Kubun param = new Kubun();
-		param.setSeq(seq);
-		return findOneById(param);
+	public KubunRecord findById(Integer seq) {
+		return this.create.selectFrom(Tables.KUBUN)
+							.where(Tables.KUBUN.SEQ.eq(seq))
+							.fetchOne();
+	}
+
+	/**
+	 * 区分のリストを全件返す
+	 * @return 区分のリスト
+	 */
+	public List<KubunRecord> findAllOrderById() {
+		return this.create.selectFrom(Tables.KUBUN)
+							.orderBy(Tables.KUBUN.SEQ)
+							.fetch();
 	}
 
 	/**
@@ -62,10 +69,10 @@ public class KubunRepository extends AbstractRepository<Kubun> {
 	 * @param kubunType 区分種別
 	 * @return 区分のリスト
 	 */
-	public List<Kubun> findKubunList(String kubunType) {
-		Kubun param = new Kubun();
-		param.setTypeCode(kubunType);
-		return findByParam(param);
+	public List<KubunRecord> findKubunList(String kubunType) {
+		return this.create.selectFrom(Tables.KUBUN)
+							.where(Tables.KUBUN.TYPE_CODE.eq(kubunType))
+							.fetch();
 	}
 
 	/**
@@ -73,8 +80,9 @@ public class KubunRepository extends AbstractRepository<Kubun> {
 	 * @return 区分番号の最大値
 	 */
 	public int findMaxNumber() {
-		String sql = "select max(seq) from kubun";
-		Integer seq = getNamedParameterJdbcTemplate().queryForObject(sql, new EmptySqlParameterSource(), Integer.class);
+		Integer seq = this.create.select(max(Tables.KUBUN.SEQ))
+									.from(Tables.KUBUN)
+									.fetchOneInto(Integer.class);
 		if (seq == null) {
 			seq = 0;
 		}
