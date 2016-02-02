@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
+<head>
+<title th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}">権限割当</title>
+<style type="text/css">
+<!--
+form span, form td { font-size: small; }
+thead { background-color: mediumseagreen; }
+thead tr td { border-style: solid; border-width: 0px; padding: 3px; }
+#assignTable { collapse: collapse; }
+#assignTable tr:hover { background-color: aquamarine; }
+.oddRecord { background-color: palegreen; }
+.evenRecord { background-color: lightgreen; }
+-->
+</style>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+var sortColumn = 'workplaceId';
+var sortOrder = "ASC";
+
+<!--/* イベント処理 */-->
+$(function(){
+	$("form").on("dblclick", "#workplaceListArea tr", function(){
+		$("input[name='inWorkplaceId']").val(this.id);
+		var act = /*[[@{/MTE010/selectWorkplace}]]*/ '#'
+		$("form").attr("action", act);
+		$("form").submit();
+	});
+
+});
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="layout">
+	<div id="content_body" >
+		<div id="content">
+			<!-- メインコンテンツ設定欄 -->
+			<div align="center" layout:fragment="content">
+
+<div style="margiin: 15px;">
+<form th:action="@{/MTA010}" method="post">
+<!--/* フォーム開始 */-->
+
+
+<!--/* 検索部分 */-->
+<div class="search">
+	<div class="floatLeft">
+		部署
+		<select name="deptCd">
+			<option value="">　</option>
+			<option th:each="rec : ${form.deptList}" th:value="${rec.code}" th:text="${rec.name}"
+				th:selected="${rec.code == form.deptCd}"/>
+		</select>
+	</div>
+	<div class="floatLeft left2">
+		職位
+		<select name="postCd">
+			<option value="">　</option>
+			<option th:each="rec : ${form.postList}" th:value="${rec.code}" th:text="${rec.name}"
+				th:selected="${rec.code == form.postCd}"/>
+		</select>
+	</div>
+	<span class="floatLeft left2"><input type="submit" value="検索" name="search" /></span>
+</div>
+<!--/* 検索部分おわり */-->
+
+<!--/* メッセージ */-->
+<div style="margin-bottom: 1em;">
+	<span style="color: #0000ff; font-weight: bold;" th:if="${form.empFlag}">条件に該当する社員はいませんでした。</span>
+</div>
+
+<!--/* 社員一覧 */-->
+<table style="widh: 100%;" id="assignTable">
+	<thead>
+		<tr>
+			<th>氏名</th>
+			<th style="width: 120px;">所属部署</th>
+			<th style="width:  80px;">職位</th>
+			<th style="width: 700px;">権限割当</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="rec,status : ${form.empList}" th:class="${status.odd ? 'oddRecord' : 'evenRecord'}">
+			<td th:text="${rec.lastname + ' ' + rec.firstname}"></td>
+			<td th:text="${rec.deptName}"></td>
+			<td th:text="${rec.postName}"></td>
+			<td>
+				<!--/* ユーザID */-->
+				<input type="hidden" th:name="${'empList[' + status.index + '].userId'}"/>
+				<!--/* バージョン */ -->
+				<input type="hidden" th:name="${'empList[' + status.index + '].version'}"/>
+				<!--/* 権限１プルダウン */-->
+				<select name="empList.authCd1" th:name="${'empList[' + status.index + '].authCd1'}">
+					<option value=""/>
+					<option value="" th:each="r : ${form.authList}" th:value="${r.code}" th:text="${r.name}"
+						th:selected="${r.code == rec.authCd1}" />
+				</select>
+				<!--/* 権限２プルダウン */-->
+				<select name="empList.authCd2" th:name="${'empList[' + status.index + '].authCd2'}">
+					<option value=""/>
+					<option value="" th:each="r : ${form.authList}" th:value="${r.code}" th:text="${r.name}"
+						th:selected="${r.code == rec.authCd2}" />
+				</select>
+				<!--/* 権限３プルダウン */-->
+				<select name="empList.authCd3" th:name="${'empList[' + status.index + '].authCd3'}">
+					<option value=""/>
+					<option value="" th:each="r : ${form.authList}" th:value="${r.code}" th:text="${r.name}"
+						th:selected="${r.code == rec.authCd3}" />
+				</select>
+				<!--/* 権限４プルダウン */-->
+				<select name="empList.authCd4" th:name="${'empList[' + status.index + '].authCd4'}">
+					<option value=""/>
+					<option value="" th:each="r : ${form.authList}" th:value="${r.code}" th:text="${r.name}"
+						th:selected="${r.code == rec.authCd4}" />
+				</select>
+				<!--/* 権限５プルダウン */-->
+				<select name="empList.authCd5" th:name="${'empList[' + status.index + '].authCd5'}">
+					<option value=""/>
+					<option value="" th:each="r : ${form.authList}" th:value="${r.code}" th:text="${r.name}"
+						th:selected="${r.code == rec.authCd5}" />
+				</select>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<!--/* 更新ボタン */-->
+<div class="btmbutton" th:if="${not form.empFlag}">
+	<input type="submit" value="更新" name="update" styleId="update"/>
+</div>
+
+<!--/* フォーム終了 */-->
+</form>
+</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

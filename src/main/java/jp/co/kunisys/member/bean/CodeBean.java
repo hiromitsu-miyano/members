@@ -1,11 +1,15 @@
 package jp.co.kunisys.member.bean;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * コードBean
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CodeBean {
 
 	/** コード */
