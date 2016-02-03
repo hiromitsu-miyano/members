@@ -96,6 +96,7 @@ public class MTA010Controller extends AbstractController {
     	try {
     		//ユーザ権限の登録更新処理
     		this.service.updateAuth(form);
+    		form.setFinish(true);
     	} catch (DataChangedException ex) {
     		//排他エラー時
     		result.reject("warning.optimistic");

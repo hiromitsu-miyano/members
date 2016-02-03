@@ -69,8 +69,9 @@ $(function(){
 <!--/* 検索部分おわり */-->
 
 <!--/* メッセージ */-->
-<div style="margin-bottom: 1em;">
-	<span style="color: #0000ff; font-weight: bold;" th:if="${form.empFlag}">条件に該当する社員はいませんでした。</span>
+<div style="margin-bottom: 1em; color: #0000ff; font-weight: bold;">
+	<span th:if="${form.empFlag}">条件に該当する社員はいませんでした。</span>
+	<span th:if="${form.finish}">処理が完了しました。</span>
 </div>
 <!--/* エラーメッセージ */-->
 <ul class="errorMessage">
