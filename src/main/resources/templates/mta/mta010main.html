@@ -72,6 +72,9 @@ $(function(){
 <div style="margin-bottom: 1em;">
 	<span style="color: #0000ff; font-weight: bold;" th:if="${form.empFlag}">条件に該当する社員はいませんでした。</span>
 </div>
+<ul>
+	<li th:each="e : ${#fields.detailedErrors()}" th:class="${e.global} ? globalerrMsg : fielderrMsg" th:text="${e.message}" />
+</ul>
 
 <!--/* 社員一覧 */-->
 <table style="widh: 100%;" id="assignTable">
@@ -90,9 +93,9 @@ $(function(){
 			<td th:text="${rec.postName}"></td>
 			<td>
 				<!--/* ユーザID */-->
-				<input type="hidden" th:name="${'empList[' + status.index + '].userId'}"/>
-				<!--/* バージョン */ -->
-				<input type="hidden" th:name="${'empList[' + status.index + '].version'}"/>
+				<input type="hidden" th:name="${'empList[' + status.index + '].userId'}" th:value="${rec.userId}"/>
+				<!--/* バージョン */-->
+				<input type="hidden" th:name="${'empList[' + status.index + '].version'}" th:value="${rec.version}"/>
 				<!--/* 権限１プルダウン */-->
 				<select name="empList.authCd1" th:name="${'empList[' + status.index + '].authCd1'}">
 					<option value=""/>
@@ -129,7 +132,7 @@ $(function(){
 </table>
 
 <!--/* 更新ボタン */-->
-<div class="btmbutton" th:if="${not form.empFlag}">
+<div class="btmbutton" th:if="${not #lists.isEmpty(form.empList)}">
 	<input type="submit" value="更新" name="update" styleId="update"/>
 </div>
 

@@ -57,6 +57,7 @@ public class MTA010Service {
 		//社員一覧を取得
 		SelectQuery<Record> query = this.create
 				.select()
+				//ユーザ情報
 				.from(Tables.USER_INFO)
 				//部署
 				.leftJoin(Tables.DEPARTMENT).on(Tables.USER_INFO.DEPT_CD.eq(Tables.DEPARTMENT.DEPT_CD))
@@ -66,8 +67,10 @@ public class MTA010Service {
 				.leftJoin(Tables.USER_AUTH).on(Tables.USER_INFO.USER_ID.eq(Tables.USER_AUTH.USER_ID))
 				//退職情報
 				.leftJoin(Tables.USER_INFO_RETIRE).on(Tables.USER_INFO.USER_ID.eq(Tables.USER_INFO_RETIRE.USER_ID))
+				//where
 				.where(Tables.USER_INFO.DELETED.isNull())
 				.and(Tables.USER_INFO_RETIRE.USER_ID.isNull())
+				//order
 				.orderBy(Tables.USER_INFO.DEPT_CD.asc(),
 						Tables.USER_INFO.LASTNAME_KANA.asc(),
 						Tables.USER_INFO.FIRSTNAME_KANA.asc())
@@ -82,16 +85,20 @@ public class MTA010Service {
 		}
 		List<EmpBean> empList = query.fetch().stream().map(r -> {
 			EmpBean bean = new EmpBean();
+			//ユーザ情報
 			UserInfoRecord user = r.into(Tables.USER_INFO);
 			bean.setUserId(user.getUserId());
 			bean.setFirstname(user.getFirstname());
 			bean.setLastname(user.getLastname());
 			bean.setFirstnameKana(user.getFirstnameKana());
 			bean.setLastnameKana(user.getLastnameKana());
+			//部署
 			DepartmentRecord dept = r.into(Tables.DEPARTMENT);
 			bean.setDeptName(dept.getName());
+			//職位
 			PostRecord post = r.into(Tables.POST);
 			bean.setPostName(post.getName());
+			//ユーザ権限
 			UserAuthRecord auth = r.into(Tables.USER_AUTH);
 			bean.setAuthCd1(auth.getAuthCd1());
 			bean.setAuthCd2(auth.getAuthCd2());
@@ -103,5 +110,41 @@ public class MTA010Service {
 		}).collect(Collectors.toList());
 		form.setEmpList(empList);
 		form.setEmpFlag(empList.isEmpty());
+	}
+
+
+	/**
+	 * ユーザ権限の登録更新処理
+	 * @param form フォーム
+	 */
+	public void updateAuth(MTA010Form form) {
+		if (form.getEmpList() == null) {
+			return;
+		}
+		for (EmpBean bean : form.getEmpList()) {
+			//ユーザ権限の検索
+			UserAuthRecord rec = this.create.selectFrom(Tables.USER_AUTH)
+												.where(Tables.USER_AUTH.USER_ID.eq(bean.getUserId()))
+												.fetchOne();
+			if (rec == null) {
+				rec = this.create.newRecord(Tables.USER_AUTH);
+				//ユーザID
+				rec.setUserId(bean.getUserId());
+			}
+			//権限コード１
+			rec.setAuthCd1(bean.getAuthCd1());
+			//権限コード２
+			rec.setAuthCd2(bean.getAuthCd2());
+			//権限コード３
+			rec.setAuthCd3(bean.getAuthCd3());
+			//権限コード４
+			rec.setAuthCd4(bean.getAuthCd4());
+			//権限コード５
+			rec.setAuthCd5(bean.getAuthCd5());
+			//バージョン
+			rec.setVersion(bean.getVersion());
+			//登録or更新
+			rec.store();
+		}
 	}
 }
