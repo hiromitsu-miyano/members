@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import jp.co.kunisys.member.bean.CodeBean;
 import jp.co.kunisys.member.bean.mta.EmpBean;
-import jp.co.kunisys.member.common.SUtil;
+import jp.co.kunisys.member.common.util.SUtil;
 import jp.co.kunisys.member.form.MTA010Form;
 import jp.co.kunisys.member.query.Tables;
 import jp.co.kunisys.member.query.tables.records.DepartmentRecord;

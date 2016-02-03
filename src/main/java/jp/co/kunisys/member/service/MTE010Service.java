@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jp.co.kunisys.member.common.BeanMap;
-import jp.co.kunisys.member.common.BeanUtil;
 import jp.co.kunisys.member.common.Code;
-import jp.co.kunisys.member.common.DUtil;
+import jp.co.kunisys.member.common.util.BeanUtil;
+import jp.co.kunisys.member.common.util.DUtil;
 import jp.co.kunisys.member.form.MTE010Form;
 import jp.co.kunisys.member.query.Tables;
 import jp.co.kunisys.member.query.tables.records.WorkplaceRecord;

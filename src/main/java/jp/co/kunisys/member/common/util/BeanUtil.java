@@ -1,4 +1,4 @@
-package jp.co.kunisys.member.common;
+package jp.co.kunisys.member.common.util;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;

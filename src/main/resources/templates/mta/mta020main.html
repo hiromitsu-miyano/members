@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
+<head>
+<title th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}">権限情報一覧</title>
+<style type="text/css">
+<!--
+form span, form td { font-size: small; }
+thead { background-color: mediumseagreen; }
+thead tr td { border-style: solid; border-width: 0px; padding: 3px; }
+#assignTable { collapse: collapse; }
+#assignTable tr:hover { background-color: aquamarine; }
+.oddRecord { background-color: palegreen; }
+.evenRecord { background-color: lightgreen; }
+-->
+</style>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+var sortColumn = 'workplaceId';
+var sortOrder = "ASC";
+
+<!--/* イベント処理 */-->
+$(function(){
+	$("form").on("dblclick", "#workplaceListArea tr", function(){
+		$("input[name='inWorkplaceId']").val(this.id);
+		var act = /*[[@{/MTE010/selectWorkplace}]]*/ '#'
+		$("form").attr("action", act);
+		$("form").submit();
+	});
+
+});
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="layout">
+	<div id="content_body" >
+		<div id="content">
+			<!-- メインコンテンツ設定欄 -->
+			<div align="center" layout:fragment="content">
+
+<div style="margiin: 15px;">
+<form th:object="${form}" th:action="@{/MTA010}" method="post">
+<!--/* フォーム開始 */-->
+
+
+<div style="float: right;">
+	<a href="#">機能権限編集</a>
+</div>
+
+<!--/* メッセージ */-->
+<div style="margin-bottom: 1em; color: #0000ff; font-weight: bold;">
+	<span th:if="${form.finish}">処理が完了しました。</span>
+</div>
+<!--/* エラーメッセージ */-->
+<ul class="errorMessage">
+	<li th:each="e : ${#fields.detailedErrors()}" th:text="${e.message}" />
+</ul>
+
+<!--/* 権限一覧 */-->
+<table style="widh: 100%;" id="assignTable">
+	<thead>
+		<tr>
+			<th>権限コード</th>
+			<th style="width: 250px;">権限名</th>
+			<th>
+				<a th:href="@{/MTA030/init}">追加</a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="rec,status : ${form.authList}" th:class="${status.odd ? 'oddRecord' : 'evenRecord'}">
+			<td th:text="${rec.authCd}"></td>
+			<td th:text="${rec.name}"></td>
+			<td>
+				<a href="#" th:href="@{/MTA030/init(paramAuthCd=${rec.authCd})}">編集</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+
+<!--/* フォーム終了 */-->
+</form>
+</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

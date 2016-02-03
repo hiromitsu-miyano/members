@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import jp.co.kunisys.member.bean.CodeBean;
+import jp.co.kunisys.member.common.util.BeanUtil;
 
 /**
  * {@link BeanUtil}のテストクラス

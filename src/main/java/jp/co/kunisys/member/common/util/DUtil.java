@@ -1,4 +1,4 @@
-package jp.co.kunisys.member.common;
+package jp.co.kunisys.member.common.util;
 
 import java.sql.Timestamp;
 import java.util.Date;

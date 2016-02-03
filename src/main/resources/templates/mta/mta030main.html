@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
+<head>
+<title th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}">権限情報編集</title>
+<style type="text/css">
+<!--
+form span, form td { font-size: small; }
+thead { background-color: mediumseagreen; }
+thead tr td { border-style: solid; border-width: 0px; padding: 3px; }
+#assignTable { collapse: collapse; }
+#assignTable tr:hover { background-color: aquamarine; }
+.oddRecord { background-color: palegreen; }
+.evenRecord { background-color: lightgreen; }
+-->
+</style>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+var sortColumn = 'workplaceId';
+var sortOrder = "ASC";
+
+<!--/* イベント処理 */-->
+$(function(){
+	$("form").on("dblclick", "#workplaceListArea tr", function(){
+		$("input[name='inWorkplaceId']").val(this.id);
+		var act = /*[[@{/MTE010/selectWorkplace}]]*/ '#'
+		$("form").attr("action", act);
+		$("form").submit();
+	});
+
+});
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="layout">
+	<div id="content_body" >
+		<div id="content">
+			<!-- メインコンテンツ設定欄 -->
+			<div align="center" layout:fragment="content">
+
+<div style="margiin: 15px;">
+<form th:object="${form}" th:action="@{/MTA030}" method="post">
+<!--/* フォーム開始 */-->
+
+
+<!--/* メッセージ */-->
+<div style="margin-bottom: 1em; color: #0000ff; font-weight: bold;">
+</div>
+<!--/* エラーメッセージ */-->
+<ul class="errorMessage">
+	<li th:each="e : ${#fields.detailedErrors()}" th:text="${e.message}" />
+</ul>
+
+<!--/* 権限一覧 */-->
+<table style="widh: 100%;" id="assignTable">
+	<tr>
+		<th>権限コード</th>
+		<td>
+			<input type="text" maxlength="3" th:field="${form.authCd}" th:errorClass="error"/>
+		</td>
+	</tr>
+	<tr>
+		<th>権限名</th>
+		<td>
+			<input type="text" maxlength="100" th:field="${form.name}" th:errorClass="error"/>
+		</td>
+	</tr>
+</table>
+<table style="width: 100%;">
+	<thead>
+		<tr>
+			<th>機能名</th>
+			<th>機能コメント</th>
+			<th>権限なし</th>
+			<th>権限あり</th>
+			<th>本人のみ編集可</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="rec,status : ${form.authFunctionList}" th:class="${status.odd} ? 'oddRecord' : 'evenRecord'">
+			<td th:text="${rec.name}"></td>
+			<td th:text="${rec.comment}"></td>
+			<td>
+				<input type="radio" th:name="${'authFunctionList[' + status.index + '].authAssign'}" value="0"
+					th:checked="${rec.authAssign == '0'}"/>
+			</td>
+			<td>
+				<input type="radio" th:name="${'authFunctionList[' + status.index + '].authAssign'}" value="1"
+					th:checked="${rec.authAssign == '1'}"/>
+			</td>
+			<td>
+				<input type="radio" th:name="${'authFunctionList[' + status.index + '].authAssign'}" value="2"
+					th:checked="${rec.authAssign == '2'}"/>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br/>
+<!--/* ボタン */-->
+<div>
+	<input type="submit" name="insertAuth" value="登録" styleId="insert" th:if="${#strings.isEmpty(form.paramAuthCd)}"/>
+	<input type="submit" name="updateAuth" value="更新" styleId="update" th:if="${not #strings.isEmpty(form.paramAuthCd)}"/>
+	<input type="submit" name="deleteAuth" value="削除" styleId="delete" th:if="${not #strings.isEmpty(form.paramAuthCd)}"/>
+</div>
+
+
+<!--/* フォーム終了 */-->
+</form>
+</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

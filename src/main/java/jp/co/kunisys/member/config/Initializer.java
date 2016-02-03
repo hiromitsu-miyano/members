@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import jp.co.kunisys.member.common.Code;
 import jp.co.kunisys.member.common.Constants;
-import jp.co.kunisys.member.common.SUtil;
+import jp.co.kunisys.member.common.util.SUtil;
 import jp.co.kunisys.member.query.tables.records.AppInfoRecord;
 import jp.co.kunisys.member.query.tables.records.KubunRecord;
 import jp.co.kunisys.member.repository.AppInfoRepository;

@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jp.co.kunisys.member.bean.CodeBean;
+import jp.co.kunisys.member.common.util.SUtil;
 import jp.co.kunisys.member.query.tables.records.KubunRecord;
 
 /**

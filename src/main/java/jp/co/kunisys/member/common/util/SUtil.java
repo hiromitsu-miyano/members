@@ -1,4 +1,4 @@
-package jp.co.kunisys.member.common;
+package jp.co.kunisys.member.common.util;
 
 import java.util.ArrayList;
 import java.util.List;
