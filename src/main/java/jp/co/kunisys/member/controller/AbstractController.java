@@ -33,4 +33,5 @@ public class AbstractController {
 	public String getViewName() {
 		return this.viewName;
 	}
+
 }

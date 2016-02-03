@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.WebApplicationContext;
@@ -98,7 +97,8 @@ public class MTA010Controller extends AbstractController {
     		//ユーザ権限の登録更新処理
     		this.service.updateAuth(form);
     	} catch (DataChangedException ex) {
-    		result.addError(new ObjectError("form", "ほかの端末で更新済みです。画面を再表示して、再度更新を行ってください。"));
+    		//排他エラー時
+    		result.reject("warning.optimistic");
     	}
     	//検索
     	this.service.searchAuthAssign(form);

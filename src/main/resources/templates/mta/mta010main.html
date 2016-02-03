@@ -42,7 +42,7 @@ $(function(){
 			<div align="center" layout:fragment="content">
 
 <div style="margiin: 15px;">
-<form th:action="@{/MTA010}" method="post">
+<form th:object="${form}" th:action="@{/MTA010}" method="post">
 <!--/* フォーム開始 */-->
 
 
@@ -72,8 +72,9 @@ $(function(){
 <div style="margin-bottom: 1em;">
 	<span style="color: #0000ff; font-weight: bold;" th:if="${form.empFlag}">条件に該当する社員はいませんでした。</span>
 </div>
-<ul>
-	<li th:each="e : ${#fields.detailedErrors()}" th:class="${e.global} ? globalerrMsg : fielderrMsg" th:text="${e.message}" />
+<!--/* エラーメッセージ */-->
+<ul class="errorMessage">
+	<li th:each="e : ${#fields.detailedErrors()}" th:text="${e.message}" />
 </ul>
 
 <!--/* 社員一覧 */-->
