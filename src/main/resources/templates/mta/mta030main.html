@@ -18,16 +18,18 @@ thead tr td { border-style: solid; border-width: 0px; padding: 3px; }
 </style>
 <script type="text/javascript" th:inline="javascript">
 /*<![CDATA[*/
-var sortColumn = 'workplaceId';
-var sortOrder = "ASC";
 
 <!--/* イベント処理 */-->
 $(function(){
-	$("form").on("dblclick", "#workplaceListArea tr", function(){
-		$("input[name='inWorkplaceId']").val(this.id);
-		var act = /*[[@{/MTE010/selectWorkplace}]]*/ '#'
-		$("form").attr("action", act);
-		$("form").submit();
+	$("form").on("click", "input#insert", function(){
+		if (confirm('登録します。よろしいですか？')) return true;
+		return false;
+	}).on("click", "input#update", function(){
+		if (confirm('更新します。よろしいですか？')) return true;
+		return false;
+	}).on("click", "input#delete", function(){
+		if (confirm('削除します。よろしいですか？')) return true;
+		return false;
 	});
 
 });
@@ -81,6 +83,7 @@ $(function(){
 	</thead>
 	<tbody>
 		<tr th:each="rec,status : ${form.authFunctionList}" th:class="${status.odd} ? 'oddRecord' : 'evenRecord'">
+			<input type="hidden" th:name="${'authFunctionList[' + status.index + '].authFunctionCd'}" th:value="${rec.authFunctionCd}"/>
 			<td th:text="${rec.name}"></td>
 			<td th:text="${rec.comment}"></td>
 			<td>
@@ -101,9 +104,9 @@ $(function(){
 <br/>
 <!--/* ボタン */-->
 <div>
-	<input type="submit" name="insertAuth" value="登録" styleId="insert" th:if="${#strings.isEmpty(form.paramAuthCd)}"/>
-	<input type="submit" name="updateAuth" value="更新" styleId="update" th:if="${not #strings.isEmpty(form.paramAuthCd)}"/>
-	<input type="submit" name="deleteAuth" value="削除" styleId="delete" th:if="${not #strings.isEmpty(form.paramAuthCd)}"/>
+	<input type="submit" name="insertAuth" value="登録" id="insert" th:if="${#strings.isEmpty(form.paramAuthCd)}"/>
+	<input type="submit" name="updateAuth" value="更新" id="update" th:if="${not #strings.isEmpty(form.paramAuthCd)}"/>
+	<input type="submit" name="deleteAuth" value="削除" id="delete" th:if="${not #strings.isEmpty(form.paramAuthCd)}"/>
 </div>
 
 

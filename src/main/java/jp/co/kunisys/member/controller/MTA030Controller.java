@@ -2,6 +2,7 @@ package jp.co.kunisys.member.controller;
 
 import java.util.ArrayList;
 
+import org.jooq.exception.DataChangedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -28,10 +30,8 @@ public class MTA030Controller extends AbstractController {
 
     /** 画面名. */
     public static final String NAME = "権限情報編集";
-    /** 初期処理(追加) */
-    public static final String INIT_INSERT = "/MTA030/initInsert";
-    /** 初期処理(更新) */
-    public static final String INIT_UPDATE = "/MTA030/initUpdate";
+    /** 初期処理 */
+    public static final String INIT = "/MTA030/init";
 
     /** 自画面テンプレート. */
     private static final String MY_VIEW = "mta/mta030main";
@@ -79,15 +79,11 @@ public class MTA030Controller extends AbstractController {
      * @return 自画面
      */
     @RequestMapping(value = "/init")
-    public String initInsert(@ModelAttribute("form") MTA030Form form) {
+    public String initInsert(@ModelAttribute("form") MTA030Form form,
+    						@RequestParam("paramAuthCd") String paramAuthCd) {
     	//初回検索
-    	if (form.getParamAuthCd() == null) {
-    		//新規
-    		form.setParamAuthCd("");
-    	} else {
-    		//更新・削除
-    		this.service.searchAuth(form);
-    	}
+    	form.setParamAuthCd(paramAuthCd);
+		this.service.searchAuth(form);
     	this.service.searchAuthFunctionList(form);
     	//自画面を表示
     	return MY_VIEW;
@@ -102,15 +98,14 @@ public class MTA030Controller extends AbstractController {
      */
     @RequestMapping(params = "insertAuth")
     public String insert(@ModelAttribute("form") MTA030Form form, BindingResult result) {
-    	//フォームチェック結果
-    	if (result.hasErrors()) {
-    		return MY_VIEW;
-    	}
     	//独自チェック
     	this.service.checkInsert(form, result);
     	if (result.hasErrors()) {
     		return MY_VIEW;
     	}
+
+    	//権限の登録処理
+    	this.service.insertAuth(form);
 
     	return "redirect:" + MTA020Controller.INIT;
     }
@@ -124,14 +119,18 @@ public class MTA030Controller extends AbstractController {
      */
     @RequestMapping(params = "updateAuth")
     public String update(@ModelAttribute("form") MTA030Form form, BindingResult result) {
-    	//フォームチェック結果
-    	if (result.hasErrors()) {
-    		return MY_VIEW;
-    	}
     	//独自チェック
     	this.service.checkUpdate(form, result);
     	if (result.hasErrors()) {
     		return MY_VIEW;
+    	}
+    	//更新処理
+    	try {
+    		this.service.updateAuth(form);
+
+    	} catch(DataChangedException ex) {
+    		//排他エラー時
+    		result.reject("warning.optimistic");
     	}
 
     	return "redirect:" + MTA020Controller.INIT;
@@ -146,14 +145,18 @@ public class MTA030Controller extends AbstractController {
      */
     @RequestMapping(params = "deleteAuth")
     public String delete(@ModelAttribute("form") MTA030Form form, BindingResult result) {
-    	//フォームチェック結果
-    	if (result.hasErrors()) {
-    		return MY_VIEW;
-    	}
     	//独自チェック
     	this.service.checkUpdate(form, result);
     	if (result.hasErrors()) {
     		return MY_VIEW;
+    	}
+    	//削除処理
+    	try {
+    		this.service.deleteAuth(form);
+
+    	} catch(DataChangedException ex) {
+    		//排他エラー時
+    		result.reject("warning.optimistic");
     	}
 
     	return "redirect:" + MTA020Controller.INIT;

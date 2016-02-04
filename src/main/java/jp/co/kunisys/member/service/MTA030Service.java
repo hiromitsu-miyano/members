@@ -3,14 +3,17 @@ package jp.co.kunisys.member.service;
 import java.util.List;
 
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import jp.co.kunisys.member.bean.mta.AuthFuncBean;
 import jp.co.kunisys.member.common.util.ChkUtil;
+import jp.co.kunisys.member.common.util.NUtil;
 import jp.co.kunisys.member.form.MTA030Form;
 import jp.co.kunisys.member.query.Tables;
+import jp.co.kunisys.member.query.tables.records.AuthAssignRecord;
 import jp.co.kunisys.member.query.tables.records.AuthRecord;
 
 /**
@@ -33,6 +36,9 @@ public class MTA030Service {
 										.where(Tables.AUTH.AUTH_CD.eq(form.getParamAuthCd()))
 										.fetchOne();
 		if (rec == null) {
+			form.setAuthCd(null);
+			form.setName(null);
+			form.setVersion(null);
 			return;
 		}
 		//権限コード
@@ -77,6 +83,7 @@ public class MTA030Service {
         sql.append(" a.sortkey");
 
         List<AuthFuncBean> beanList = this.create.fetch(sql.toString()).into(AuthFuncBean.class);
+        //権限割当の初期値として[0:権限なし]を設定
         beanList.stream().filter(b -> b.getAuthAssign() == null).forEach(b -> b.setAuthAssign("0"));
         form.setAuthFunctionList(beanList);
 	}
@@ -100,6 +107,122 @@ public class MTA030Service {
 		if (auth != null) {
 			result.rejectValue("authCd", null, "コードが重複しています。");
 		}
+	}
+
+
+	/**
+	 * 権限の登録処理
+	 * @param form フォーム
+	 */
+	public synchronized void insertAuth(MTA030Form form) {
+		//権限の登録処理
+		AuthRecord authRec = this.create.newRecord(Tables.AUTH);
+		//権限コード
+		authRec.setAuthCd(form.getAuthCd());
+		//権限名
+		authRec.setName(form.getName());
+		//並び順
+		Integer sortKey = createNewSortKey();
+		authRec.setSortkey(sortKey);
+		//バージョン
+		authRec.setVersion(form.getVersion());
+		//登録処理実行
+		authRec.store();
+
+		//機能権限の登録処理
+		for (AuthFuncBean bean : form.getAuthFunctionList()) {
+			AuthAssignRecord assignRec = this.create.newRecord(Tables.AUTH_ASSIGN);
+			//権限コード
+			assignRec.setAuthCd(form.getAuthCd());
+			//機能権限コード
+			assignRec.setAuthFunctionCd(bean.getAuthFunctionCd());
+			//権限割当
+			assignRec.setAuthAssign(NUtil.toByte(bean.getAuthAssign()));
+			//登録処理実行
+			assignRec.store();
+		}
+	}
+
+
+	/**
+	 * 権限の更新処理
+	 * @param form フォーム
+	 */
+	public synchronized void updateAuth(MTA030Form form) {
+		//更新対象を取得
+		AuthRecord authRec = this.create.selectFrom(Tables.AUTH)
+											.where(Tables.AUTH.AUTH_CD.eq(form.getAuthCd()))
+											.fetchOne();
+		if (authRec == null) {
+			return;
+		}
+
+		//権限名
+		authRec.setName(form.getName());
+		//並び順
+		Integer sortKey = createNewSortKey();
+		authRec.setSortkey(sortKey);
+		//バージョン
+		authRec.setVersion(form.getVersion());
+		//更新処理実行
+		authRec.store();
+
+		//機能権限の削除処理
+		this.create.deleteFrom(Tables.AUTH_ASSIGN)
+					.where(Tables.AUTH_ASSIGN.AUTH_CD.eq(form.getAuthCd()))
+					.execute();
+
+		//機能権限の登録処理
+		for (AuthFuncBean bean : form.getAuthFunctionList()) {
+			AuthAssignRecord assignRec = this.create.newRecord(Tables.AUTH_ASSIGN);
+			//権限コード
+			assignRec.setAuthCd(form.getAuthCd());
+			//機能権限コード
+			assignRec.setAuthFunctionCd(bean.getAuthFunctionCd());
+			//権限割当
+			assignRec.setAuthAssign(NUtil.toByte(bean.getAuthAssign()));
+			//登録処理実行
+			assignRec.store();
+		}
+	}
+
+
+	/**
+	 * 権限の削除処理
+	 * @param form フォーム
+	 */
+	public synchronized void deleteAuth(MTA030Form form) {
+		//削除対象を取得
+		AuthRecord authRec = this.create.selectFrom(Tables.AUTH)
+											.where(Tables.AUTH.AUTH_CD.eq(form.getAuthCd()))
+											.fetchOne();
+		if (authRec == null) {
+			return;
+		}
+
+		//削除処理実行
+		authRec.delete();
+
+		//機能権限の削除処理
+		this.create.deleteFrom(Tables.AUTH_ASSIGN)
+					.where(Tables.AUTH_ASSIGN.AUTH_CD.eq(form.getAuthCd()))
+					.execute();
+	}
+
+
+	/**
+	 * 並び順を発番する
+	 * @return 並び順
+	 */
+	private Integer createNewSortKey() {
+		Integer maxNo = this.create.select(DSL.max(Tables.AUTH.SORTKEY))
+									.from(Tables.AUTH)
+									.fetchOneInto(Integer.class);
+		if (maxNo == null) {
+			maxNo = 0;
+		}
+		maxNo++;
+		return maxNo;
 	}
 
 

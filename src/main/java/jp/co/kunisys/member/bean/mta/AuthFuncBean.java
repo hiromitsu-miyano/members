@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 public class AuthFuncBean implements Serializable {
 
+	/** 機能権限コード */
+	private String authFunctionCd;
 	/** 機能名 */
 	private String name;
 	/** 機能コメント */
