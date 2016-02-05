@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import jp.co.kunisys.member.bean.mta.ControllerBean;
@@ -22,6 +23,7 @@ import jp.co.kunisys.member.query.tables.records.AuthFunctionRecord;
 /**
  * 機能権限編集サービス
  */
+@Transactional
 @Service
 public class MTA040Service {
 

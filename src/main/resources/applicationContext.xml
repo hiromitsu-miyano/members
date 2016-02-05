@@ -11,6 +11,11 @@
          http://www.springframework.org/schema/aop
          http://www.springframework.org/schema/aop/spring-aop.xsd">
 
+    <!--
+        当該ファイルをApplicationクラスでインポートし、Serviceクラスに一括でトランザクションを
+        設定しようとしたが、JOOQと組み合わせた際に起動時間が倍かかるため、現在はインポートしていない。
+        各Serviceクラス個別に@Transactionを設定すること。
+    -->
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
             <tx:method name="*" rollback-for="Exception" timeout="30"/>

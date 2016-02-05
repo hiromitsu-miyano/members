@@ -5,6 +5,7 @@ import java.util.List;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jp.co.kunisys.member.form.MTA020Form;
 import jp.co.kunisys.member.query.Tables;
@@ -13,6 +14,7 @@ import jp.co.kunisys.member.query.tables.records.AuthRecord;
 /**
  * 権限情報一覧画面サービス
  */
+@Transactional
 @Service
 public class MTA020Service {
 

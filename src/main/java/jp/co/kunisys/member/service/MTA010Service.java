@@ -8,6 +8,7 @@ import org.jooq.Record;
 import org.jooq.SelectQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jp.co.kunisys.member.bean.CodeBean;
 import jp.co.kunisys.member.bean.mta.EmpBean;
@@ -22,6 +23,7 @@ import jp.co.kunisys.member.query.tables.records.UserInfoRecord;
 /**
  * 権限割当画面サービス
  */
+@Transactional
 @Service
 public class MTA010Service {
 

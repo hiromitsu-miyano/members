@@ -6,6 +6,7 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import jp.co.kunisys.member.bean.mta.AuthFuncBean;
@@ -19,6 +20,7 @@ import jp.co.kunisys.member.query.tables.records.AuthRecord;
 /**
  * 権限情報編集画面サービス
  */
+@Transactional
 @Service
 public class MTA030Service {
 
