@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+<table>
+
+<tbody id="listbody">
+
+<tr th:each="rec,status : ${form.authFunctionList}" th:id="${rec.authFunctionCd }" th:class="${status.odd ? 'oddRecord' : 'evenRecord'}">
+	<td>&nbsp;</td>
+	<td th:text="${rec.authFunctionCd}"></td>
+	<td th:text="${rec.name}"></td>
+	<td th:text="${rec.className}"></td>
+	<td th:text="${rec.actionName}"></td>
+	<td th:text="${rec.comment}"></td>
+	<td th:text="${rec.sortkey}"></td>
+</tr>
+
+</tbody>
+
+</table>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+
+<div id="authFunctionEdit" class="editDialog">
+<!--/* エラーメッセージ */-->
+<ul class="errorMessage" th:object="${form}" style="font-size: small;">
+	<li th:each="e : ${#fields.detailedErrors()}" th:text="${e.message}" />
+</ul>
+<form class="dialog">
+	<table>
+		<tr>
+			<td>機能権限コード</td>
+			<td><input type="text" style="width: 120px;" th:field="${form.inputAuthFunctionCd}" th:errorClass="error"/></td>
+		</tr>
+		<tr>
+			<td>名称</td>
+			<td><input type="text" style="width: 400px;" th:field="${form.inputName}" th:errorClass="error"/></td>
+		</tr>
+		<tr>
+			<td>クラス名</td>
+			<td><input type="text" style="width: 300px;" th:field="${form.inputClassName}" th:errorClass="error"/></td>
+		</tr>
+		<tr>
+			<td>アクション名</td>
+			<td><input type="text" style="width: 200px;" th:field="${form.inputActionName}" th:errorClass="error"/></td>
+		</tr>
+		<tr>
+			<td>コメント</td>
+			<td><input type="text" style="width: 300px;" th:field="${form.inputComment}" th:errorClass="error"/></td>
+		</tr>
+		<tr>
+			<td>ソート順</td>
+			<td><input type="text" style="width: 60px;" th:field="${form.inputSortkey}" th:errorClass="error"/></td>
+		</tr>
+	</table>
+	<div style="margin: 5px; padding-left: 15px;">
+		<input type="button" name="btnInsert" value="登録"   th:disabled="${form.edited}"/>
+		<input type="button" name="btnUpdate" value="更新"   th:disabled="${not form.edited}"/>
+		<input type="button" name="btnDelete" value="削除"   th:disabled="${not form.edited}"/>
+		<input type="button" name="btnClear"  value="クリア" th:disabled="${form.edited}"/>
+	</div>
+</form>
+</div>
+
+</body>
+</html>
