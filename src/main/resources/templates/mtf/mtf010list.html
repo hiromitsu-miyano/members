@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+<table>
+
+<tbody id="kubunListArea">
+	<tr th:each="kubun,status : ${form.kubunList}" th:id="${kubun.seq}" th:class="${status.odd} ? 'oddRecord' : 'evenRecord'">
+		<td style="width: 20px;"></td>
+		<td class="center" style="width: 60px;" th:inline="text">[[${kubun.seq}]]</td>
+		<td class="center" style="width: 100px;" th:inline="text">[[${kubun.typeCode}]]</td>
+		<td style="width: 200px;" th:inline="text">[[${kubun.typeName}]]</td>
+		<td class="center" style="width: 80px;" th:inline="text">[[${kubun.code}]]</td>
+		<td style="width: 200px;" th:inline="text">[[${kubun.name}]]</td>
+		<td style="width: 30px;" th:inline="text">[[${kubun.deleted} ? '○' : '']]</td>
+		<td></td>
+	</tr>
+</tbody>
+
+</table>
+</body>
+</html>

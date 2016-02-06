@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE logback>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+  <property name="LOG_PATH" value="C:\\missing"/>
+
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_PATH}/members.log</file>
+    <encoder>
+      <pattern>${FILE_LOG_PATTERN}</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_PATH}/members.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <root level="INFO">
+    <!-- <appender-ref ref="FILE"/> -->
+    <appender-ref ref="CONSOLE"/>
+  </root>
+
+  <logger name="org.springframework.web" level="INFO"/>
+  <logger name="jp.co.kunisys.member" level="DEBUG"/>
+  <logger name="org.jooq" level="DEBUG"/>
+</configuration>

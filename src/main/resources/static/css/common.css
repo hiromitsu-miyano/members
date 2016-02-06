@@ -285,7 +285,7 @@ thead td {
  * バリデートエラーメッセージスタイル
  * <html:errors>の出力に合わせる
  */
-font ul {
+font ul,ul.errorMessage {
 	list-style-type:none;
 	margin:0px;
 	padding:1px;

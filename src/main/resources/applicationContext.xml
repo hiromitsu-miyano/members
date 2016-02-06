@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/tx
+         http://www.springframework.org/schema/tx/spring-tx.xsd
+         http://www.springframework.org/schema/aop
+         http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--
+        当該ファイルをApplicationクラスでインポートし、Serviceクラスに一括でトランザクションを
+        設定しようとしたが、JOOQと組み合わせた際に起動時間が倍かかるため、現在はインポートしていない。
+        各Serviceクラス個別に@Transactionを設定すること。
+    -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" rollback-for="Exception" timeout="30"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="pointcutService" expression="execution(* jp.co.kunisys.member.service..*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcutService"/>
+    </aop:config>
+
+</beans>

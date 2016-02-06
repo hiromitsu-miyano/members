@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
+<head>
+<title th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}">機能権限編集</title>
+<style type="text/css">
+<!--
+form span, form td { font-size: small; }
+thead { background-color: mediumseagreen; }
+thead tr td { border-style: solid; border-width: 0px; padding: 3px; }
+#assignTable { collapse: collapse; }
+#assignTable tr:hover { background-color: aquamarine; }
+.oddRecord { background-color: palegreen; }
+.evenRecord { background-color: lightgreen; }
+-->
+</style>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+var sortColumn = 'sortkey';
+var sortOrder = 'ASC';
+
+<!--/* 初期処理 */-->
+$(function(){
+	<!--/* 編集ダイアログ設定 */-->
+	var dialog = $("#authFunctionEdit");
+	dialog.dialog({
+		autoOpen: false,
+		show: "explode",
+		hide: "explode",
+		title: '機能権限編集',
+		modal: true,
+		width: 600,
+		close: function(event) {
+		}
+	});
+
+	var searchAuthFunction = function() {
+		$.ajax({
+			url: "searchAuthFunction", cache: false, dataType: "html", data: form.serialize()
+		}).done(function(data,status,jqXHR){
+			$("#authFunctionListArea").html(data);
+			<!--/* 機能権限件数を設定 */-->
+			$('#authFunctionCount').text($('#authFunctionListArea tr').length);
+		});
+	};
+
+	var form = $("form.main");
+	form.on("change", "#selectClassName", function(){
+		<!--/* クラス名ドロップダウン変更時 */-->
+		searchAuthFunction();
+	}).on("click", "#authFunctionListHeader a", function(){
+		<!--/* カラムヘッダ押下時 */-->
+		var order = $("#selectSortOrder").val();
+		var order = (order == '' || order == 'DESC') ? 'ASC' : 'DESC';
+		$("#selectSortOrder").val(order);
+
+		searchAuthFunction();
+	}).on("dblclick", "#authFunctionListArea tr", function(){
+		<!--/* 一覧行ダブルクリック時 */-->
+		$.ajax({
+			url: "selectAuthFunction?inputAuthFunctionCd=" + this.id, cache: false, dataType: "html"
+		}).done(function(data,status,jqXHR){
+			dialog.html(data);
+			dialog.dialog('open');
+		});
+	}).on("click", "#openEditDialog", function(){
+		<!--/* 「追加」リンク押下時イベント設定 */-->
+		$.ajax({
+			url: "selectAuthFunction", cache: false, dataType: "html"
+		}).done(function(data,status,jqXHR){
+			dialog.html(data);
+			dialog.dialog('open');
+		});
+	});
+
+	dialog.on("click", "input[name='btnInsert']", function(){
+		<!--/* 登録ボタン押下時イベント設定 */-->
+		$.ajax({
+			url: "insertAuthFunction", cache: false, dataType: "html", data: $("form.dialog").serialize()
+		}).done(function(data,status,jqXHR){
+			$("#authFunctionEdit").html(data);
+			if ($("ul.errorMessage li").size() == 0) {
+				dialog.dialog("close");
+				searchAuthFunction();
+			}
+		});
+	}).on("click", "input[name='btnUpdate']", function(){
+		<!--/* 更新ボタン押下時イベント設定 */-->
+		$.ajax({
+			url: "updateAuthFunction", cache: false, dataType: "html", data: $("form.dialog").serialize()
+		}).done(function(data,status,jqXHR){
+			$("#authFunctionEdit").html(data);
+			if ($("ul.errorMessage li").size() == 0) {
+				dialog.dialog("close");
+				searchAuthFunction();
+			}
+		});
+	}).on("click", "input[name='btnDelete']", function(){
+		<!--/* 削除ボタン押下時イベント設定 */-->
+		$.ajax({
+			url: "deleteAuthFunction", cache: false, dataType: "html", data: $("form.dialog").serialize()
+		}).done(function(data,status,jqXHR){
+			$("#authFunctionEdit").html(data);
+			if ($("ul.errorMessage li").size() == 0) {
+				dialog.dialog("close");
+				searchAuthFunction();
+			}
+		});
+	}).on("click", "#btnClear", function(){
+		<!--/* クリアボタン押下時イベント設定 */-->
+		$("#authFunctionEdit input").val('').removeClass('error');
+		$("#authFunctionEdit select").val('').removeClass('error');
+	});
+
+});
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="layout">
+	<div id="content_body" >
+		<div id="content">
+			<!-- メインコンテンツ設定欄 -->
+			<div align="center" layout:fragment="content">
+
+<div style="margiin: 10px;">
+<form th:object="${form}" th:action="@{/MTA040}" method="post" class="main">
+<!--/* フォーム開始 */-->
+
+<!--/* 検索条件部 */-->
+<div style="margin: 10px 0px;">
+	<span style="font-size: small;">アクション名：</span>
+	<span>
+		<select name="selectClassName" id="selectClassName" class="selectItem">
+			<option value="">(全て)</option>
+			<option th:each="rec : ${form.controllerList}" th:value="${rec.controllerName}"
+				th:text="${rec.controllerName + ' (' + rec.viewName + ')'}"/>
+		</select>
+	</span>
+	<input type="hidden" name="selectSortColumn" th:field="${form.selectSortColumn}"/>
+	<input type="hidden" name="selectSortOrder"  th:field="${form.selectSortOrder}"/>
+</div>
+
+<!--/* メッセージ */-->
+<div style="margin-bottom: 1em; color: #0000ff; font-weight: bold;">
+</div>
+<!--/* エラーメッセージ */-->
+<ul class="errorMessage">
+	<li th:each="e : ${#fields.detailedErrors()}" th:text="${e.message}" />
+</ul>
+
+
+
+<!--/* 機能権限一覧 */-->
+<div>
+	<div style="float: right;">
+		<span><a href="#" id="openEditDialog">機能権限追加</a></span>
+	</div>
+	<span style="margin-left: 10px; font-size:small;">件数：</span>
+	<span id="authFunctionCount"></span>
+	<span style="margin-right: 10px; font-size:small;">件</span>
+	<table class="itemList">
+		<thead id="authFunctionListHeader">
+			<tr>
+				<td style="width: 15px;">&nbsp;</td>
+				<td style="width: 90px;"><a href="#" id="authFunctionCd">機能権限コード</a></td>
+				<td style="width: 200px;"><a href="#" id="name">名称</a></td>
+				<td style="width: 200px;"><a href="#" id="className">クラス名</a></td>
+				<td style="width: 160px;"><a href="#" id="actionName">アクション名</a></td>
+				<td><a href="#" id="comment">コメント</a></td>
+				<td style="width: 60px;"><a href="#" id="sortkey">並び順</a></td>
+			</tr>
+		</thead>
+		<!--/* 一覧出力領域 */-->
+		<tbody id="authFunctionListArea" th:include="mta/mta040list :: #listbody"></tbody>
+	</table>
+</div>
+
+<!-- 編集ダイアログ -->
+<div id="authFunctionEdit" class="editDialog" th:include="mta/mta040dialog :: #authFunctionEdit"></div>
+
+
+<!--/* フォーム終了 */-->
+</form>
+</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

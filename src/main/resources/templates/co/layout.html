@@ -9,11 +9,11 @@
 <meta http-equiv="robots" content="noindex,nofollow" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta http-equiv="content-style-type" content="text/css"/>
-<title>title</title>
+<title th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}">title</title>
 <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}"/>
-<link rel="stylesheet" type="text/css" th:href="@{/css/jquery-ui-1.8.21.custom.css}" />
-<script type="text/javascript" th:src="@{/js/jquery-1.7.2.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/jquery-ui-1.8.21.custom.min.js}"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/css/jquery-ui-1.11.4.custom.min.css}"/>
+<script type="text/javascript" th:src="@{/js/jquery-2.2.0.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery-ui-1.11.4.custom.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/jquery.ui.datepicker-ja.js}"></script>
 <script type="text/javascript" th:src="@{/js/members.js}"></script>
 <!-- 戻るボタン無効 -->
@@ -125,7 +125,7 @@ $(function(){
 						<span th:text="${#authentication.principal.username}"></span>
 					</a>
 					<a href="#" id="ChangePassword" class="login" style="margin-left:20px;">パスワード変更</a>
-					<a href="logout" class="login"  style="margin-left:10px;">ログアウト</a>
+					<a href="logout" th:href="@{/COB000/logout}" class="login"  style="margin-left:10px;">ログアウト</a>
 				</span>
 				<span sec:authorize="!isAuthenticated()">
 					未ログイン
@@ -179,28 +179,32 @@ $(function(){
 					<a href="#">システムメンテナンス</a>
 					<ul>
 						<li><a href="#" class="menuItem">スキルメンテナンス</a></li>
-						<li><a href="#" class="menuItem">権限情報メンテナンス</a></li>
-						<li><a href="#" class="menuItem">権限割当</a></li>
+						<li><a href="#" class="menuItem" th:href="@{/MTA020/init}">権限情報メンテナンス</a></li>
+						<li><a href="#" class="menuItem" th:href="@{/MTA010/init}">権限割当</a></li>
 						<li><a href="#" class="menuItem">部署メンテナンス</a></li>
 						<li><a href="#" class="menuItem">職位メンテナンス</a></li>
-						<li><a href="#" class="menuItem">勤務先メンテナンス</a></li>
-						<li><a href="#" class="menuItem">区分メンテナンス</a></li>
+						<li><a href="#" class="menuItem" th:href="@{/MTE010/init}">勤務先メンテナンス</a></li>
+						<li><a href="#" class="menuItem" th:href="@{/MTF010/init}">区分メンテナンス</a></li>
 						<li><a href="#" class="menuItem">学校メンテナンス</a></li>
 						<li><a href="#" class="menuItem">連携ユーザメンテナンス</a></li>
 					</ul>
 				</li>
 			</ul>
 		</div>
+		<!--/* パンくずリスト */-->
+		<div id="header_breadcrumb_trails">
+		  <th:block th:each="rec,status : ${trails}">
+			<a href="#" th:href="@{${rec.action}}">
+				<span style="vertical-align: middle; color: white;" th:text="${rec.name}"/>
+			</a>
+			<span style="vertical-align:middle; color:white;"> &gt; </span>
+		  </th:block>
+			<span style="vertical-align: middle; color: white;" th:text="${viewName}"/>
+		</div>
 	</div>
 	<div id="content_body" >
 		<div id="content">
-			<!-- GLOBAL_MESSAGE表示欄 -->
-			<!--
-			<html:messages id="msg" message="true" property="org.apache.struts.action.GLOBAL_MESSAGE">
-				<span style="font-weight:bold;color:#0000ff;"><bean:write name="msg" ignore="true"/></span>
-			</html:messages> -->
 			<!-- メインコンテンツ設定欄 -->
-			<!-- <tiles:insert attribute="content"/> -->
 			<div align="center" layout:fragment="content">
 			</div>
 		</div>
