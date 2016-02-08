@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
+<head>
+<title th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}">連携用ユーザ情報メンテナンス</title>
+<style type="text/css">
+<!--
+#scr_tbl thead a { color: white; }
+#scr_tbl thead tr td { border-style: solid; border-width: 0px; padding: 5px; }
+#scr_tbl tbody tr:hover { background-color: aquamarine; }
+.oddRecord { background-color: palegreen; }
+.evenRecord { background-color: lightgreen; }
+.errorItem { background-color: pink; }
+.errorMessage { color: red; }
+.requiredItem { color: blue; }
+#scr_tbl tbody input:checked { outline: inset 3px red; }
+#tbl_out { position: relative; padding-top: 30px; width: 1050px; }
+#tbl_in { overflow: auto; height: 400px; }
+#scr_tbl { border-collapse: collapse; width: 100%; }
+#scr_tbl thead { background-color: mediumseagreen; color: white; }
+#scr_tbl thead tr { position: absolute; top: 0px; left: 0px; background-color: mediumseagreen; color: white; width:100%; }
+#scr_tbl thead tr td { padding:5px 1px; }
+-->
+</style>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+$(function(){
+	$("form").on("change", "select[name='srchDeptCd'], select[name='srchPostCd']", function(){
+		<!--/* プルダウン変更時イベント */-->
+		$("<input />")
+		  .attr("type", "hidden")
+		  .attr("name", "searchRelateUser")
+		  .attr("value", "searchRelateUser")
+		  .appendTo("form");
+		$("form").submit();
+	});
+
+});
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="layout">
+	<div id="content_body" >
+		<div id="content">
+			<!-- メインコンテンツ設定欄 -->
+			<div align="center" layout:fragment="content">
+
+<div style="margiin: 15px;">
+<form th:object="${form}" th:action="@{/MTH010}" method="post">
+<!--/* フォーム開始 */-->
+
+
+<!--/* 検索部分 */-->
+<div class="search" style="margin: 10px 0px;">
+    <span>部署：</span>
+    <span>
+        <select name="srchDeptCd">
+            <option th:each="rec : ${form.deptList}" th:value="${rec.deptCd}" th:text="${rec.name}" th:selected="${rec.deptCd == form.srchDeptCd}"></option>
+        </select>
+    </span>
+    <span>　　</span>
+    <span>職位：</span>
+    <span>
+        <select name="srchPostCd">
+            <option value=""></option>
+            <option th:each="rec : ${form.postList}" th:value="${rec.postCd}" th:text="${rec.name}" th:selected="${rec.postCd == form.srchPostCd}"></option>
+        </select>
+    </span>
+    <span style="margin-left: 100px;">
+        <input type="submit" name="updateRelateUser" value="更 新"/>
+    </span>
+</div>
+<!--/* 検索部分おわり */-->
+
+<!--/* メッセージ */-->
+<div style="margin-bottom: 1em; color: #0000ff; font-weight: bold;">
+    <div th:if="${finished}">処理が完了しました。</div>
+</div>
+<!--/* エラーメッセージ */-->
+<ul class="errorMessage">
+	<li th:each="e : ${#fields.detailedErrors()}" th:text="${e.message}" />
+</ul>
+
+<!--/* 社員一覧 */-->
+<div class="small">
+    <span th:text="${form.memberCountStr}">件数: 5 件</span>
+    <div id="tbl_out">
+    <div id="tbl_in">
+    <table id="scr_tbl">
+        <thead>
+            <tr>
+                <td style="width: 20px;">&nbsp;</td>
+                <td style="width:200px;">社員名</td>
+                <td class="center" style="width:200px;">部署</td>
+                <td style="width: 100px;">職位</td>
+                <td style="width: 400px;">連携先ユーザ</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody id="listArea">
+            <tr th:each="rec,status : ${form.memberList}" th:id="${rec.relateId}" th:class="${status.odd ? 'oddRecord' : 'evenRecord'}">
+                <td></td>
+                <td th:text="${rec.userId + ':' + rec.memberName}"></td>
+                <td th:text="${rec.deptName}"></td>
+                <td th:text="${rec.postName}"></td>
+                <td>
+                    <select th:name="${'memberList[' + status.index + '].relateUserId'}">
+                        <option value=""></option>
+                        <option th:each="r : ${form.userList}" th:value="${r.memberCode}" th:text="${r.memberName}" th:selected="${r.memberCode == rec.relateUserId}"></option>
+                    </select>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    </div>
+</div>
+
+
+<!--/* フォーム終了 */-->
+</form>
+</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
