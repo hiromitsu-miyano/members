@@ -132,7 +132,13 @@ public class MTA040Service {
 	}
 
 
+	/**
+	 * ActionとControllerの読み替え処理
+	 * @param controller コントローラ名
+	 * @return アクション名
+	 */
 	private String convCotrollerToAction(String controller) {
+		//TODO 権限データの見直し
 		return SUtil.replace(controller, "Controller", "Action");
 	}
 

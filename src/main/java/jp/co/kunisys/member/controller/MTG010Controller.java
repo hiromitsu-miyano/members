@@ -3,6 +3,8 @@ package jp.co.kunisys.member.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.jooq.exception.DataChangedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -78,6 +80,7 @@ public class MTG010Controller extends AbstractController {
      * @param form フォーム
      * @return 自画面
      */
+    @RolesAllowed("MTG010_INIT")
     @RequestMapping(value = "/init")
     public String init(@ModelAttribute("form") MTG010Form form) {
     	//学校一覧の検索処理

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
+<head>
+<title>ログイン</title>
+</head>
+<body>
+<div id="layout">
+	<div id="content_body" >
+		<div id="content">
+			<!-- メインコンテンツ設定欄 -->
+			<div align="center" layout:fragment="content">
+
+
+				<div style="text-align: center; height: 500px; vertical-align: middle;">
+					<div style="padding: 10px;">
+						<span style="font-size: 30px; color: red;" th:text="${form.message1}"></span>
+					</div>
+					<div style="padding: 10px;">
+						<span th:text="${form.message2}"></span>
+					</div>
+					<div style="padding: 10px;">
+						<a href="#" th:href="@{/COA000/init}">ログイン画面に戻る</a>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

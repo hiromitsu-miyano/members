@@ -46,7 +46,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutRequestMatcher(new AntPathRequestMatcher("/COB000/logout"))
 				.logoutSuccessUrl("/COA000/init")
 				.invalidateHttpSession(true)
-				.permitAll();
+				.permitAll()
+				.and()
+			.exceptionHandling()
+				.accessDeniedPage("/COC000/forbidden");
 	}
 
 	@Autowired
