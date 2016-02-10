@@ -56,6 +56,31 @@ public class SUtil {
 		{ "ｰ", "ー" }, { "", "" }
 	};
 
+	/**
+	 * コンストラクタ
+	 */
+	private SUtil() {
+	}
+
+	/**
+	 * オブジェクトを文字列に変換する。
+	 * nullの場合、空文字に変換する。
+	 * @param value オブジェクト
+	 * @return 文字列
+	 */
+	public static String valueOf(Object value) {
+		return (value == null) ? "" : value.toString();
+	}
+
+	/**
+	 * SQLエスケープ処理
+	 * @param value 値
+	 * @return 処理後の値
+	 */
+	public static String escape(String value) {
+		return value.replace("'", "''");
+	}
+
     /**
      * 文字列が<code>null</code>または空文字列なら<code>true</code>を返します。
      * @param text 文字列
