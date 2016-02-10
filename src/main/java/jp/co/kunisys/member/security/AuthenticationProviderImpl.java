@@ -64,7 +64,7 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
 
 		List<SimpleGrantedAuthority> authorities = createAuthorities(user);
 		LoginUser login = new LoginUser(user, authorities);
-		return new UsernamePasswordAuthenticationToken(login, password, auth.getAuthorities());
+		return new UsernamePasswordAuthenticationToken(login, password, authorities);
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
 						AuthFunctionRecord func = r.into(Tables.AUTH_FUNCTION);
 						String className = SUtil.upperCase(SUtil.left(func.getClassName(), 6));
 						String methodName = SUtil.upperCase(func.getActionName());
-						String authName = String.format("%s_%s", className, methodName);
+						String authName = String.format("ROLE_%s_%s", className, methodName);
 						boolean exist = authorities.stream().anyMatch(a -> SUtil.equals(a.getAuthority(), authName));
 						if (!exist) {
 							authorities.add(new SimpleGrantedAuthority(authName));

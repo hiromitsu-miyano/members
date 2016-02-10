@@ -1,5 +1,6 @@
 package jp.co.kunisys.member.form;
 
+import java.io.Serializable;
 import java.util.List;
 
 import jp.co.kunisys.member.bean.CodeBean;
@@ -11,7 +12,7 @@ import lombok.Data;
  * 勤務先メンテナンス画面フォーム
  */
 @Data
-public class MTE010Form {
+public class MTE010Form implements Serializable {
 
 	/** 勤務先区分リスト */
 	private List<CodeBean> typeList;

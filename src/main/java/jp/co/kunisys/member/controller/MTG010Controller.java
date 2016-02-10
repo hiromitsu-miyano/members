@@ -3,11 +3,10 @@ package jp.co.kunisys.member.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.security.RolesAllowed;
-
 import org.jooq.exception.DataChangedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -45,7 +44,6 @@ public class MTG010Controller extends AbstractController {
     @Autowired
     private MTG010Service service;
 
-
     /**
      * コンストラクタ
      */
@@ -56,7 +54,6 @@ public class MTG010Controller extends AbstractController {
     	//画面名設定
     	this.viewName = NAME;
 	}
-
 
     /**
      * フォームの生成
@@ -75,12 +72,13 @@ public class MTG010Controller extends AbstractController {
     }
 
 
+
     /**
      * 初期処理
      * @param form フォーム
      * @return 自画面
      */
-    @RolesAllowed("MTG010_INIT")
+    @PreAuthorize("hasRole('MTG010_INIT')")
     @RequestMapping(value = "/init")
     public String init(@ModelAttribute("form") MTG010Form form) {
     	//学校一覧の検索処理
@@ -95,6 +93,7 @@ public class MTG010Controller extends AbstractController {
      * @param form フォーム
      * @return 自画面一覧
      */
+    @PreAuthorize("hasRole('MTG010_SEARCHSCHOOL')")
     @RequestMapping(value = "/searchSchool")
     public String searchSchool(@ModelAttribute("form") MTG010Form form) {
     	//学校一覧の検索処理
@@ -109,6 +108,7 @@ public class MTG010Controller extends AbstractController {
      * @param form フォーム
      * @return フォーム
      */
+    @PreAuthorize("hasRole('MTG010_SELECTSCHOOL')")
     @RequestMapping(value = "/selectSchool")
     public String selectSchool(@ModelAttribute("form") MTG010Form form) {
     	//学校の選択処理
@@ -125,6 +125,7 @@ public class MTG010Controller extends AbstractController {
      * @param model Model
      * @return フォーム
      */
+    @PreAuthorize("hasRole('MTG010_INSERTSCHOOL')")
     @RequestMapping(value = "/insertSchool")
     public String insertSchool(@ModelAttribute("form") MTG010Form form, BindingResult result, Model model) {
     	//入力チェック
@@ -145,6 +146,7 @@ public class MTG010Controller extends AbstractController {
      * @param model Model
      * @return フォーム
      */
+    @PreAuthorize("hasRole('MTG010_UPDATESCHOOL')")
     @RequestMapping(value = "/updateSchool")
     public String updateSchool(@ModelAttribute("form") MTG010Form form, BindingResult result, Model model) {
     	//入力チェック
@@ -170,6 +172,7 @@ public class MTG010Controller extends AbstractController {
      * @param model Model
      * @return フォーム
      */
+    @PreAuthorize("hasRole('MTG010_DELETESCHOOL')")
     @RequestMapping(value = "/deleteSchool")
     public String deleteSchool(@ModelAttribute("form") MTG010Form form, BindingResult result, Model model) {
     	//入力チェック

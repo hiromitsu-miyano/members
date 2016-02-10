@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +40,6 @@ public class MTF010Controller extends AbstractController {
     @Autowired
     private MTF010Service mtf010Service;
 
-
     /**
      * コンストラクタ
      */
@@ -51,7 +51,6 @@ public class MTF010Controller extends AbstractController {
     	this.viewName = NAME;
 	}
 
-
     /**
      * フォームの生成
      * @return フォーム
@@ -62,11 +61,13 @@ public class MTF010Controller extends AbstractController {
     }
 
 
+
     /**
      * 初期処理
      * @param form フォーム
      * @return 自画面
      */
+    @PreAuthorize("hasRole('MTF010_INIT')")
     @RequestMapping(value = "/init")
     public String init(@ModelAttribute("form") MTF010Form form) {
     	//区分種別リスト生成
@@ -85,6 +86,7 @@ public class MTF010Controller extends AbstractController {
      * @param form フォーム
      * @return 自画面リスト
      */
+    @PreAuthorize("hasRole('MTF010_SEARCHKUBUN')")
     @RequestMapping(value = "/searchKubun")
     public String searchKubun(@ModelAttribute("form") MTF010Form form) {
     	//検索処理
@@ -99,6 +101,7 @@ public class MTF010Controller extends AbstractController {
      * @param form フォーム
      * @return フォーム(JSON)
      */
+    @PreAuthorize("hasRole('MTF010_SELECTKUBUN')")
     @ResponseBody
     @RequestMapping(value = "/selectKubun")
     public MTF010Form selectKubun(@ModelAttribute("form") MTF010Form form) {
@@ -114,6 +117,7 @@ public class MTF010Controller extends AbstractController {
      * @param form フォーム
      * @return フォーム(JSON)
      */
+    @PreAuthorize("hasRole('MTF010_INSERTKUBUN')")
     @ResponseBody
     @RequestMapping(value = "/insertKubun")
     public MTF010Form insertKubun(@ModelAttribute("form") MTF010Form form) {
@@ -132,6 +136,7 @@ public class MTF010Controller extends AbstractController {
      * @param form フォーム
      * @return フォーム(JSON)
      */
+    @PreAuthorize("hasRole('MTF010_UPDATEKUBUN')")
     @ResponseBody
     @RequestMapping(value = "/updateKubun")
     public MTF010Form updateKubun(@ModelAttribute("form") MTF010Form form) {
@@ -147,6 +152,7 @@ public class MTF010Controller extends AbstractController {
      * @param form フォーム
      * @return フォーム(JSON)
      */
+    @PreAuthorize("hasRole('MTF010_DELETEKUBUN')")
     @ResponseBody
     @RequestMapping(value = "/deleteKubun")
     public MTF010Form deleteKubun(@ModelAttribute("form") MTF010Form form) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jooq.exception.DataChangedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,7 +39,6 @@ public class MTH010Controller extends AbstractController {
     @Autowired
     private MTH010Service service;
 
-
     /**
      * コンストラクタ
      */
@@ -50,7 +50,6 @@ public class MTH010Controller extends AbstractController {
     	this.viewName = NAME;
 	}
 
-
     /**
      * フォームの生成
      * @return フォーム
@@ -61,11 +60,13 @@ public class MTH010Controller extends AbstractController {
     }
 
 
+
     /**
      * 初期処理
      * @param form フォーム
      * @return 自画面
      */
+    @PreAuthorize("hasRole('MTH010_INIT')")
     @RequestMapping(value = "/init")
     public String init(@ModelAttribute("form") MTH010Form form) {
     	//部署リストの検索処理
@@ -90,6 +91,7 @@ public class MTH010Controller extends AbstractController {
      * @param form フォーム
      * @return 自画面
      */
+    @PreAuthorize("hasRole('MTH010_SEARCHRELATEUSER')")
     @RequestMapping(params = "searchRelateUser")
     public String searchRelateUser(@ModelAttribute("form") MTH010Form form) {
     	//社員の検索処理
@@ -105,6 +107,7 @@ public class MTH010Controller extends AbstractController {
      * @param result バリデート結果
      * @return 自画面
      */
+    @PreAuthorize("hasRole('MTH010_UPDATERELATEUSER')")
     @RequestMapping(params = "updateRelateUser")
     public String updateRelateUser(@ModelAttribute("form") MTH010Form form, BindingResult result, Model model) {
     	try {
