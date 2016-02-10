@@ -24,7 +24,7 @@ import jp.co.kunisys.member.service.MTH010Service;
 @Controller
 @Scope(WebApplicationContext.SCOPE_REQUEST)
 @RequestMapping(value = "/MTH010")
-@SessionAttributes(value = "form")
+@SessionAttributes(value = "mth010Form")
 public class MTH010Controller extends AbstractController {
 
     /** 画面名. */
@@ -54,7 +54,7 @@ public class MTH010Controller extends AbstractController {
      * フォームの生成
      * @return フォーム
      */
-    @ModelAttribute("form")
+    @ModelAttribute("mth010Form")
     public MTH010Form createForm() {
     	return new MTH010Form();
     }
@@ -68,7 +68,7 @@ public class MTH010Controller extends AbstractController {
      */
     @PreAuthorize("hasRole('MTH010_INIT')")
     @RequestMapping(value = "/init")
-    public String init(@ModelAttribute("form") MTH010Form form) {
+    public String init(@ModelAttribute("mth010Form") MTH010Form form) {
     	//部署リストの検索処理
     	this.service.searchDeptList(form);
     	//職位リストの検索処理
@@ -93,7 +93,7 @@ public class MTH010Controller extends AbstractController {
      */
     @PreAuthorize("hasRole('MTH010_SEARCHRELATEUSER')")
     @RequestMapping(params = "searchRelateUser")
-    public String searchRelateUser(@ModelAttribute("form") MTH010Form form) {
+    public String searchRelateUser(@ModelAttribute("mth010Form") MTH010Form form) {
     	//社員の検索処理
     	this.service.searchMemberList(form);
     	//自画面を表示
@@ -109,7 +109,7 @@ public class MTH010Controller extends AbstractController {
      */
     @PreAuthorize("hasRole('MTH010_UPDATERELATEUSER')")
     @RequestMapping(params = "updateRelateUser")
-    public String updateRelateUser(@ModelAttribute("form") MTH010Form form, BindingResult result, Model model) {
+    public String updateRelateUser(@ModelAttribute("mth010Form") MTH010Form form, BindingResult result, Model model) {
     	try {
     		//連携用ユーザ情報の更新処理
     		this.service.updateRelateUser(form);
