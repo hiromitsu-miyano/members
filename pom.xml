@@ -16,6 +16,7 @@
     <querydsl.version>4.0.7</querydsl.version>
     <lombok.version>1.16.6</lombok.version>
     <mysql-connector.version>5.1.38</mysql-connector.version>
+    <commons.lang.version>3.4</commons.lang.version>
     <db.driver>com.mysql.jdbc.Driver</db.driver>
     <db.url>jdbc:mysql://192.168.2.205:3306/members</db.url>
     <db.user>kunisys</db.user>
@@ -246,6 +247,11 @@
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons.lang.version}</version>
     </dependency>
     <!-- Lombok -->
     <dependency>

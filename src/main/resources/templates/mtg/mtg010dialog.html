@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+
+<div id="editDlg" class="small" style="background-color: palegreen; margin-top: 15px;">
+<form class="dialog">
+<!--/* エラーメッセージ */-->
+<ul class="errorMessage" th:object="${form}" style="font-size: small;">
+	<li th:each="e : ${#fields.detailedErrors()}" th:text="${e.message}" />
+</ul>
+	<input type="hidden" th:field="${form.inputSchoolId}"/>
+	<input type="hidden" th:field="${form.inputVersion}"/>
+	<table>
+		<tr>
+			<td><span class="requiredItem">学校名</span></td>
+			<td>
+				<input type="text" style="width: 200px;" th:field="${form.inputSchoolName}" th:errorClass="error"/>
+			</td>
+		</tr>
+		<tr>
+			<td><span class="requiredItem">学校区分</span></td>
+			<td>
+				<select th:field="${form.inputSchoolType}" th:errorClass="error">
+					<option value=""></option>
+					<option th:each="rec : ${form.schoolTypeList}" th:value="${rec.code}" th:text="${rec.name}"
+						th:selected="${rec.code == form.inputSchoolType}"></option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td><span class="requiredItem">所在県</span></td>
+			<td>
+				<select th:field="${form.inputPrefCd}" th:errorClass="error">
+					<option value=""/>
+					<option th:each="rec : ${form.prefList}" th:value="${rec.code}" th:text="${rec.name}"
+						th:selected="${rec.code == form.inputPrefCd}"/>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>コメント</td>
+			<td>
+				<input type="text" style="width: 300px;" maxlength="300" th:field="${form.inputComment}" th:errorClass="error"/>
+			</td>
+		</tr>
+	</table>
+	<div style="margin: 5px; padding-left: 15px;">
+		<input type="button" id="btnInsert" value="登録"/>
+		<input type="button" id="btnUpdate" value="更新"/>
+		<input type="button" id="btnDelete" value="削除"/>
+		<button id="btnClear">クリア</button>
+	</div>
+</form>
+</div>
+
+</body>
+</html>

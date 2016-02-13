@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
+<head>
+<title th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}">学校マスタメンテナンス</title>
+<style type="text/css">
+<!--
+#scr_tbl thead a { color: white; }
+#scr_tbl thead tr td { border-style: solid;	border-width: 0px; padding: 5px; }
+#scr_tbl tbody tr:hover { background-color: aquamarine; }
+.oddRecord { background-color: palegreen; }
+.evenRecord { background-color: lightgreen; }
+.errorItem { background-color: pink; }
+.errorMessage { color: red; }
+.requiredItem { color: blue; }
+#scr_tbl tbody input:checked { outline: inset 3px red; }
+#tbl_out { position: relative; padding-top: 30px; width: 1050px; }
+#tbl_in { overflow: auto; height: 400px; }
+#scr_tbl { border-collapse: collapse; width: 100%; }
+#scr_tbl thead { background-color: mediumseagreen; color: white; }
+#scr_tbl thead tr { position: absolute; top: 0px; left: 0px; background-color: mediumseagreen; color: white; width:100%; }
+#scr_tbl thead tr td { padding:5px 1px; }
+-->
+</style>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+<!--/* 初期処理 */-->
+$(function(){
+	<!--/* 編集ダイアログ設定 */-->
+	var dialog = $("#editDlg");
+	dialog.dialog({
+		autoOpen: false,
+		show: "explode",
+		hide: "explode",
+		title: '学校編集',
+		modal: true,
+		width: 450,
+		close: function(event) {
+		}
+	});
+
+	var form = $("form.mainForm");
+	var searchSchool = function(){
+		$.ajax({
+			url: "searchSchool", cache: false, dataType: "html", data: form.serialize()
+		}).done(function(data,status,jqXHR){
+			$("#scr_tbl tbody").html(data);
+			$("#listCount").text( $("#scr_tbl tbody tr").length );
+		});
+	};
+	form.on("change", "select[name='selectPref'],select[name='selectSchoolType']", function(){
+		<!--/* 「都道府県」「学校区分」変更時イベント */-->
+		searchSchool();
+	}).on("click", "#openEditDialog", function(){
+		<!--/* 「学校追加」リンク押下時イベント設定 */-->
+		$.ajax({
+			url: "selectSchool", cache: false, dataType: "html"
+		}).done(function(data,status,jqXHR){
+			dialog.html(data);
+			dialog.dialog('open');
+		});
+	}).on("dblclick", "#scr_tbl tbody tr", function(){
+		<!--/* 一覧行ダブルクリック時 */-->
+		var params = {};
+		params["selectSchoolId"] = this.id;
+		$.ajax({
+			url: "selectSchool", cache: false, dataType: "html", data: params
+		}).done(function(data,status,jqXHR){
+			dialog.html(data);
+			dialog.dialog('open');
+		});
+	});
+
+	dialog.on("click", "#btnInsert", function(){
+		<!--/* 「登録」ボタン押下時イベント設定 */-->
+		$.ajax({
+			url: "insertSchool", cache: false, dataType: "html", data: $("form.dialog").serialize()
+		}).done(function(data,status,jqXHR){
+			dialog.html(data);
+			if ($("ul.errorMessage li").size() == 0) {
+				dialog.dialog("close");
+				searchSchool();
+			}
+		});
+	}).on("click", "#btnUpdate", function(){
+		<!--/* 「更新」ボタン押下時イベント設定 */-->
+		$.ajax({
+			url: "updateSchool", cache: false, dataType: "html", data: $("form.dialog").serialize()
+		}).done(function(data,status,jqXHR){
+			dialog.html(data);
+			if ($("ul.errorMessage li").size() == 0) {
+				dialog.dialog("close");
+				searchSchool();
+			}
+		});
+	}).on("click", "#btnDelete", function(){
+		<!--/* 「削除」ボタン押下時イベント設定 */-->
+		$.ajax({
+			url: "deleteSchool", cache: false, dataType: "html", data: $("form.dialog").serialize()
+		}).done(function(data,status,jqXHR){
+			dialog.html(data);
+			if ($("ul.errorMessage li").size() == 0) {
+				dialog.dialog("close");
+				searchSchool();
+			}
+		});
+	}).on("click", "#btnClear", function(){
+		<!--/* 「クリア」ボタン押下時イベント設定 */-->
+		$("#inputSchoolName").val('');
+		$("#inputSchoolType").val('');
+		$("#inputPrefCd").val('');
+	});
+
+});
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="layout">
+	<div id="content_body" >
+		<div id="content">
+			<!-- メインコンテンツ設定欄 -->
+			<div align="center" layout:fragment="content">
+
+<div style="margin: 10px;">
+	<form class="mainForm" method="post" action="/send">
+
+		<!--/* メッセージ */-->
+		<div style="margin-bottom: 1em; color: #0000ff; font-weight: bold;">
+		</div>
+		<!--/* エラーメッセージ */-->
+		<ul class="errorMessage" th:object="${form}" style="font-size: small;">
+			<li th:each="e : ${#fields.detailedErrors()}" th:text="${e.message}" />
+		</ul>
+
+		<!--/* 検索条件部 */-->
+		<div class="small" style="margin: 10px 0px;">
+			<span>都道府県：</span>
+			<span>
+				<select name="selectPref">
+					<option value=""></option>
+					<option th:each="rec : ${form.prefList}" th:value="${rec.code}" th:text="${rec.name}"></option>
+				</select>
+			</span>
+			<span style="width: 2em;"></span>
+			<span>学校区分：</span>
+			<span>
+				<select name="selectSchoolType">
+					<option value=""></option>
+					<option th:each="rec : ${form.schoolTypeList}" th:value="${rec.code}" th:text="${rec.name}"></option>
+				</select>
+			</span>
+		</div>
+
+		<!--/* 一覧部 */-->
+		<div class="small">
+			<div style="float: right;">
+				<span><a href="#" id="openEditDialog">学校追加</a></span>
+			</div>
+			<span>件数：</span>
+			<span id="listCount"></span>
+			<span>件</span>
+			<span style="margin-left: 20px; color: blue;">※行をダブルクリックすると、編集ダイアログが開きます。</span>
+			<div id="tbl_out">
+			<div id="tbl_in">
+			<table id="scr_tbl">
+				<thead>
+					<tr>
+						<td style="width: 20px;">&nbsp;</td>
+						<td style="width: 200px;">学校名</td>
+						<td class="center" style="width: 100px;">学校区分</td>
+						<td style="width: 100px;">所在県</td>
+						<td style="width: 400px;">コメント</td>
+					</tr>
+				</thead>
+				<!--/* 一覧出力領域 */-->
+				<tbody id="listArea" th:include="mtg/mtg010list :: #listArea"></tbody>
+			</table>
+			</div>
+			</div>
+		</div>
+
+<div id="editDlg" style="display: none;" th:include="mtg/mtg010dialog :: #editDlg">
+</div>
+
+	</form>
+</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

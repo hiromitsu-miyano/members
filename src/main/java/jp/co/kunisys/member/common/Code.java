@@ -14,20 +14,61 @@ import jp.co.kunisys.member.query.tables.records.KubunRecord;
  */
 public class Code {
 
-	/** プロジェクト形態コード */
-	public static class PROJECT_TYPE {
-		/** 区分種類 */
-		public static String TYPE = "011";
+	/** 000:区分種別 */
+	public static final class ROOT {
+		/** 区分種別 */
+		public static final String TYPE = "000";
 	}
-	/** システム構成コード */
-	public static class SYSTEM_ARCHITECTURE {
-		/** 区分種類 */
-		public static String TYPE = "012";
+	/** 001:都道府県コード */
+	public static final class PREF {
+		/** 区分種別 */
+		public static final String TYPE = "001";
+	}
+	/** 002:学校区分コード */
+	public static final class SCHOOL_TYPE {
+		/** 区分種別 */
+		public static final String TYPE = "002";
+	}
+	/** 003:退職区分コード */
+	public static final class RETIRE_TYPE {
+		/** 区分種別 */
+		public static final String TYPE = "003";
+	}
+	/** 004:続柄区分コード */
+	public static final class RELATION_TYPE {
+		/** 区分種別 */
+		public static final String TYPE = "004";
+	}
+	/** 005:同居区分コード */
+	public static final class STAY_TYPE {
+		/** 区分種別 */
+		public static final String TYPE = "005";
+	}
+	/** 006:扶養区分コード */
+	public static final class SUPPORT_TYPE {
+		/** 区分種別 */
+		public static final String TYPE = "006";
+	}
+	/** 007:辞令区分コード */
+	public static final class APPOINT_TYPE {
+		/** 区分種別 */
+		public static final String TYPE = "007";
 	}
 
-	public static class WORKPLACE_KUBUN {
-		/** 区分種類 */
-		public static String TYPE = "013";
+	/** 011:プロジェクト形態コード */
+	public static final class PROJECT_TYPE {
+		/** 区分種別 */
+		public static final String TYPE = "011";
+	}
+	/** 012:システム構成コード */
+	public static final class SYSTEM_ARCHITECTURE {
+		/** 区分種別 */
+		public static final String TYPE = "012";
+	}
+	/** 013:勤務先区分 */
+	public static final class WORKPLACE_KUBUN {
+		/** 区分種別 */
+		public static final String TYPE = "013";
 	}
 
 	/** コードリスト */

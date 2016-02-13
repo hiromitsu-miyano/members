@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<body>
+<table>
+
+<tbody id="listArea">
+	<tr th:each="rec,status : ${form.schoolList}" th:id="${rec.schoolId}" th:class="${status.odd} ? 'oddRecord' : 'evenRecord'">
+		<td style="width: 20px;"></td>
+		<td style="width: 200px;" th:text="${rec.schoolName}"></td>
+		<td style="width: 100px;" class="center" th:text="${rec.schoolTypeName}"></td>
+		<td style="width: 100px;" th:text="${rec.prefCdName}"></td>
+		<td style="width: 400px;" th:text="${rec.comment}"></td>
+		<td></td>
+	</tr>
+</tbody>
+
+</table>
+</body>
+</html>

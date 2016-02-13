@@ -25,7 +25,7 @@ import jp.co.kunisys.member.service.MTA030Service;
 @Controller
 @Scope(WebApplicationContext.SCOPE_REQUEST)
 @RequestMapping(value = "/MTA030")
-@SessionAttributes(value = "form")
+@SessionAttributes(value = "mta030Form")
 public class MTA030Controller extends AbstractController {
 
     /** 画面名. */
@@ -58,7 +58,7 @@ public class MTA030Controller extends AbstractController {
      * フォームの生成
      * @return フォーム
      */
-    @ModelAttribute("form")
+    @ModelAttribute("mta030Form")
     public MTA030Form getForm() {
     	return new MTA030Form();
     }
@@ -66,7 +66,7 @@ public class MTA030Controller extends AbstractController {
      * バインダ設定
      * @param binder バインダ
      */
-    @InitBinder("form")
+    @InitBinder("mta030Form")
     public void initBinder(WebDataBinder binder) {
     	//型変換時自動生成コレクションの上限(256)を拡張する
     	binder.setAutoGrowCollectionLimit(1000);
@@ -79,7 +79,7 @@ public class MTA030Controller extends AbstractController {
      * @return 自画面
      */
     @RequestMapping(value = "/init")
-    public String initInsert(@ModelAttribute("form") MTA030Form form,
+    public String initInsert(@ModelAttribute("mta030Form") MTA030Form form,
     						@RequestParam("paramAuthCd") String paramAuthCd) {
     	//初回検索
     	form.setParamAuthCd(paramAuthCd);
@@ -97,7 +97,7 @@ public class MTA030Controller extends AbstractController {
      * @return 自画面
      */
     @RequestMapping(params = "insertAuth")
-    public String insert(@ModelAttribute("form") MTA030Form form, BindingResult result) {
+    public String insert(@ModelAttribute("mta030Form") MTA030Form form, BindingResult result) {
     	//独自チェック
     	this.service.checkInsert(form, result);
     	if (result.hasErrors()) {
@@ -118,7 +118,7 @@ public class MTA030Controller extends AbstractController {
      * @return 自画面
      */
     @RequestMapping(params = "updateAuth")
-    public String update(@ModelAttribute("form") MTA030Form form, BindingResult result) {
+    public String update(@ModelAttribute("mta030Form") MTA030Form form, BindingResult result) {
     	//独自チェック
     	this.service.checkUpdate(form, result);
     	if (result.hasErrors()) {
@@ -144,7 +144,7 @@ public class MTA030Controller extends AbstractController {
      * @return 自画面
      */
     @RequestMapping(params = "deleteAuth")
-    public String delete(@ModelAttribute("form") MTA030Form form, BindingResult result) {
+    public String delete(@ModelAttribute("mta030Form") MTA030Form form, BindingResult result) {
     	//独自チェック
     	this.service.checkUpdate(form, result);
     	if (result.hasErrors()) {

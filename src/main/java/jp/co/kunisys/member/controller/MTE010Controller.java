@@ -20,7 +20,7 @@ import jp.co.kunisys.member.service.MTE010Service;
 @Controller
 @Scope(WebApplicationContext.SCOPE_REQUEST)
 @RequestMapping(value = "/MTE010")
-@SessionAttributes(value = "form")
+@SessionAttributes(value = "mte010Form")
 public class MTE010Controller extends AbstractController {
 
     /** 画面名. */
@@ -54,7 +54,7 @@ public class MTE010Controller extends AbstractController {
      * フォームの生成
      * @return フォーム
      */
-    @ModelAttribute("form")
+    @ModelAttribute("mte010Form")
     public MTE010Form getForm() {
     	return new MTE010Form();
     }
@@ -66,7 +66,7 @@ public class MTE010Controller extends AbstractController {
      * @return 自画面
      */
     @RequestMapping(value = "/init")
-    public String init(@ModelAttribute("form") MTE010Form form) {
+    public String init(@ModelAttribute("mte010Form") MTE010Form form) {
     	//フォームの初期化
     	form.init();
     	//初回検索
@@ -82,7 +82,7 @@ public class MTE010Controller extends AbstractController {
      * @return 自画面一覧部
      */
     @RequestMapping(value = "/searchWorkplace")
-    public String searchWorkplace(@ModelAttribute("form") MTE010Form form) {
+    public String searchWorkplace(@ModelAttribute("mte010Form") MTE010Form form) {
     	//勤務先一覧を検索
     	this.mte010Service.sarchWorkplaceList(form);
     	//自画面一覧を返却
@@ -96,7 +96,7 @@ public class MTE010Controller extends AbstractController {
      * @return 自画面
      */
     @RequestMapping(value = "/selectWorkplace")
-    public String selectWorkplace(@ModelAttribute("form") MTE010Form form) {
+    public String selectWorkplace(@ModelAttribute("mte010Form") MTE010Form form) {
     	//勤務先の選択処理
     	this.mte010Service.selectWorkplace(form);
     	//自画面を表示
@@ -110,7 +110,7 @@ public class MTE010Controller extends AbstractController {
      * @return 自画面
      */
     @RequestMapping(params = "insertWorkplace")
-    public String insertWorkplace(@ModelAttribute("form") MTE010Form form) {
+    public String insertWorkplace(@ModelAttribute("mte010Form") MTE010Form form) {
     	//勤務先の登録処理
     	this.mte010Service.insertWorkplace(form);
     	//初期化
@@ -126,7 +126,7 @@ public class MTE010Controller extends AbstractController {
      * @return 自画面
      */
     @RequestMapping(params = "updateWorkplace")
-    public String updateWorkplace(@ModelAttribute("form") MTE010Form form) {
+    public String updateWorkplace(@ModelAttribute("mte010Form") MTE010Form form) {
     	//勤務先の更新処理
     	this.mte010Service.updateWorkplace(form);
     	//初期化

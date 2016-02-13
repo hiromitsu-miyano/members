@@ -179,14 +179,14 @@ $(function(){
 					<a href="#">システムメンテナンス</a>
 					<ul>
 						<li><a href="#" class="menuItem">スキルメンテナンス</a></li>
-						<li><a href="#" class="menuItem" th:href="@{/MTA020/init}">権限情報メンテナンス</a></li>
-						<li><a href="#" class="menuItem" th:href="@{/MTA010/init}">権限割当</a></li>
+						<li><a href="#" class="menuItem" th:href="@{/MTA020/init}" sec:authorize="hasRole('MTA020_INIT')">権限情報メンテナンス</a></li>
+						<li><a href="#" class="menuItem" th:href="@{/MTA010/init}" sec:authorize="hasRole('MTA010_INIT')">権限割当</a></li>
 						<li><a href="#" class="menuItem">部署メンテナンス</a></li>
 						<li><a href="#" class="menuItem">職位メンテナンス</a></li>
-						<li><a href="#" class="menuItem" th:href="@{/MTE010/init}">勤務先メンテナンス</a></li>
-						<li><a href="#" class="menuItem" th:href="@{/MTF010/init}">区分メンテナンス</a></li>
-						<li><a href="#" class="menuItem">学校メンテナンス</a></li>
-						<li><a href="#" class="menuItem">連携ユーザメンテナンス</a></li>
+						<li><a href="#" class="menuItem" th:href="@{/MTE010/init}" sec:authorize="hasRole('MTE010_INIT')">勤務先メンテナンス</a></li>
+						<li><a href="#" class="menuItem" th:href="@{/MTF010/init}" sec:authorize="hasRole('MTF010_INIT')">区分メンテナンス</a></li>
+						<li><a href="#" class="menuItem" th:href="@{/MTG010/init}" sec:authorize="hasRole('MTG010_INIT')">学校メンテナンス</a></li>
+						<li><a href="#" class="menuItem" th:href="@{/MTH010/init}" sec:authorize="hasRole('MTH010_INIT')">連携ユーザメンテナンス</a></li>
 					</ul>
 				</li>
 			</ul>

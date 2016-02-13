@@ -43,7 +43,7 @@ $(function(){
 			<div align="center" layout:fragment="content">
 
 <div style="margiin: 10px;">
-<form th:action="@{/MTE010}">
+<form th:action="@{/MTE010}" th:object="${mte010Form}">
 <!--/* フォーム開始 */-->
 
 <!--/* 一覧部 */-->
@@ -63,7 +63,7 @@ $(function(){
 		</thead>
 		<!--/* 一覧出力領域 */-->
 		<tbody id="workplaceListArea">
-            <tr th:each="rec,status : ${form.workplaceList}" th:id="${rec.workplaceId }" th:class="${(status.count % 2 == 1) ? 'oddRecord' : 'evenRecord'}">
+            <tr th:each="rec,status : *{workplaceList}" th:id="${rec.workplaceId }" th:class="${(status.count % 2 == 1) ? 'oddRecord' : 'evenRecord'}">
                 <td>&nbsp;</td>
                 <td th:text="${rec.workplaceId}"></td>
                 <td th:text="${rec.workplaceTypeName}"></td>
@@ -83,23 +83,23 @@ $(function(){
 	<div style="margin-left: 15px;">
 		<div id="viehWorkplaceId" style="width: 90px; float: left;">&nbsp;</div>
 		<!--/* 勤務先ID */-->
-		<input type="hidden" name="inWorkplaceId" th:field="${form.inWorkplaceId}"/>
+		<input type="hidden" th:field="*{inWorkplaceId}"/>
         <!--/* 勤務先区分 */-->
-        <select name="inWorkplaceType" th:field="${form.inWorkplaceType}">
+        <select th:field="*{inWorkplaceType}">
           <option value=""></option>
-          <option th:each="rec : ${form.typeList}" th:value="${rec.code}" th:text="${rec.name}"></option>
+          <option th:each="rec : *{typeList}" th:value="${rec.code}" th:text="${rec.name}"></option>
         </select>
 		<!--/* 勤務先名 */-->
-		<input type="text" name="inName" style="width: 200px;" th:field="${form.inName}"/>
-		<label><input type="checkbox" name="inDelete" th:field="${form.inDelete}"/>&nbsp;削除</label>
+		<input type="text" style="width: 200px;" th:field="*{inName}"/>
+		<label><input type="checkbox" th:field="*{inDelete}"/>&nbsp;削除</label>
 		<!--/* 備考 */-->
-		<input type="text" name="inRemark" th:field="${form.inRemark}"/>
+		<input type="text" th:field="*{inRemark}"/>
 		<!--/* バージョン */-->
-		<input type="hidden" name="inVersion" th:field="${form.inVersion}"/>
+		<input type="hidden" th:field="*{inVersion}"/>
 	</div>
 	<div style="margin: 5px; padding-left: 15px;">
-		<input type="submit" name="insertWorkplace" value="登録" th:disabled="${form.inWorkplaceId != null}"/>
-		<input type="submit" name="updateWorkplace" value="更新" th:disabled="${form.inWorkplaceId == null}"/>
+		<input type="submit" name="insertWorkplace" value="登録" th:disabled="*{inWorkplaceId != null}"/>
+		<input type="submit" name="updateWorkplace" value="更新" th:disabled="*{inWorkplaceId == null}"/>
 		<input type="submit" name="init" value="クリア"/>
 	</div>
 </div>
