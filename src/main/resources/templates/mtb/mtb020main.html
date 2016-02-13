@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
+<head>
+<title th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}">部署情報編集</title>
+<style type="text/css">
+<!--
+form span, form td { font-size: small; }
+thead { background-color: mediumseagreen; }
+thead tr td { border-style: solid; border-width: 0px; padding: 3px; }
+#assignTable { collapse: collapse; }
+#assignTable tr:hover { background-color: aquamarine; }
+.oddRecord { background-color: palegreen; }
+.evenRecord { background-color: lightgreen; }
+-->
+</style>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+
+<!--/* イベント処理 */-->
+$(function(){
+	$("form").on("click", "input#insert", function(){
+		if (confirm('登録します。よろしいですか？')) return true;
+		return false;
+	}).on("click", "input#update", function(){
+		if (confirm('更新します。よろしいですか？')) return true;
+		return false;
+	}).on("click", "input#delete", function(){
+		if (confirm('削除します。よろしいですか？')) return true;
+		return false;
+	});
+
+});
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="layout">
+	<div id="content_body" >
+		<div id="content">
+			<!-- メインコンテンツ設定欄 -->
+			<div align="center" layout:fragment="content">
+
+<div style="margiin: 15px;">
+<form th:object="${mtb020Form}" th:action="@{/MTB020}" method="post">
+<!--/* フォーム開始 */-->
+
+
+<!--/* メッセージ */-->
+<div style="margin-bottom: 1em; color: #0000ff; font-weight: bold;">
+</div>
+<!--/* エラーメッセージ */-->
+<ul class="errorMessage">
+	<li th:each="e : ${#fields.detailedErrors()}" th:text="${e.message}" />
+</ul>
+
+<table>
+	<tr>
+		<td>部署コード</td>
+		<td>
+			<input type="text" th:field="*{deptCd}" th:if="*{#strings.isEmpty(paramDeptCd)}" th:errorClass="error"/>
+			<th:block th:if="*{not #strings.isEmpty(paramDeptCd)}">
+				<input type="hidden" th:field="*{paramDeptCd}"/>
+				<input type="hidden" th:field="*{deptCd}"/>
+				<input type="hidden" th:field="*{version}"/>
+				<span th:text="*{deptCd}"></span>
+			</th:block>
+		</td>
+	</tr>
+	<tr>
+		<td>部署名</td>
+		<td>
+			<input type="text" th:field="*{name}" th:errorClass="error"/>
+		</td>
+	</tr>
+</table>
+<br/>
+<!--/* ボタン */-->
+<div>
+	<input type="submit" name="insertDept" value="追加" id="insert" th:if="*{#strings.isEmpty(paramDeptCd)}"/>
+	<input type="submit" name="updateDept" value="更新" id="update" th:if="*{not #strings.isEmpty(paramDeptCd)}"/>
+	<input type="submit" name="deleteDept" value="削除" id="delete" th:if="*{not #strings.isEmpty(paramDeptCd)}"/>
+</div>
+
+
+<!--/* フォーム終了 */-->
+</form>
+</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

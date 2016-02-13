@@ -181,7 +181,7 @@ $(function(){
 						<li><a href="#" class="menuItem">スキルメンテナンス</a></li>
 						<li><a href="#" class="menuItem" th:href="@{/MTA020/init}" sec:authorize="hasRole('MTA020_INIT')">権限情報メンテナンス</a></li>
 						<li><a href="#" class="menuItem" th:href="@{/MTA010/init}" sec:authorize="hasRole('MTA010_INIT')">権限割当</a></li>
-						<li><a href="#" class="menuItem">部署メンテナンス</a></li>
+						<li><a href="#" class="menuItem" th:href="@{/MTB010/init}" sec:authorize="hasRole('MTB010_INIT')">部署メンテナンス</a></li>
 						<li><a href="#" class="menuItem">職位メンテナンス</a></li>
 						<li><a href="#" class="menuItem" th:href="@{/MTE010/init}" sec:authorize="hasRole('MTE010_INIT')">勤務先メンテナンス</a></li>
 						<li><a href="#" class="menuItem" th:href="@{/MTF010/init}" sec:authorize="hasRole('MTF010_INIT')">区分メンテナンス</a></li>
