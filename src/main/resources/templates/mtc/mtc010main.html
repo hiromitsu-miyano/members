@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
+<head>
+<title th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}">職位メンテナンス</title>
+<style type="text/css">
+<!--
+-->
+</style>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="layout">
+	<div id="content_body" >
+		<div id="content">
+			<!-- メインコンテンツ設定欄 -->
+			<div align="center" layout:fragment="content">
+
+<div style="margiin: 15px;">
+<form th:object="${mtc010Form}" th:action="@{/MTC010}" method="post">
+<!--/* フォーム開始 */-->
+
+
+
+<!--/* メッセージ */-->
+<div style="margin-bottom: 1em; color: #0000ff; font-weight: bold;">
+</div>
+<!--/* エラーメッセージ */-->
+<ul class="errorMessage">
+	<li th:each="e : ${#fields.detailedErrors()}" th:text="${e.message}" />
+</ul>
+
+<!--/* 職位一覧 */-->
+<table style="widh: 100%;">
+	<thead>
+		<tr>
+			<th>職位コード</th>
+			<th>職位名</th>
+			<th><a href="#" th:href="@{/MTC020/init(paramPostCd='')}">追加</a></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="rec,status : *{postList}" th:class="${status.odd ? 'oddRecord' : 'evenRecord'}">
+			<td th:text="${rec.postCd}"></td>
+			<td th:text="${rec.name}"></td>
+			<td>
+				<a href="#" th:href="@{/MTC020/init(paramPostCd=${rec.postCd})}">編集</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<!--/* フォーム終了 */-->
+</form>
+</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
