@@ -3,6 +3,7 @@ package jp.co.kunisys.member.form;
 import java.util.List;
 
 import jp.co.kunisys.member.common.BeanMap;
+import jp.co.kunisys.member.query.tables.records.SkillKindRecord;
 import lombok.Data;
 
 /**
@@ -11,6 +12,8 @@ import lombok.Data;
 @Data
 public class MTD010Form {
 
+	/** スキル種類リスト */
+	private List<SkillKindRecord> skillKindList;
 	/** スキルツリー表示表リスト */
 	private List<BeanMap> skillList;
 

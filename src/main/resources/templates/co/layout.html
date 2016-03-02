@@ -178,7 +178,7 @@ $(function(){
 				<li>
 					<a href="#">システムメンテナンス</a>
 					<ul>
-						<li><a href="#" class="menuItem">スキルメンテナンス</a></li>
+						<li><a href="#" class="menuItem" th:href="@{/MTD010/init}" sec:authorize="hasRole('MTD010_INIT')">スキルメンテナンス</a></li>
 						<li><a href="#" class="menuItem" th:href="@{/MTA020/init}" sec:authorize="hasRole('MTA020_INIT')">権限情報メンテナンス</a></li>
 						<li><a href="#" class="menuItem" th:href="@{/MTA010/init}" sec:authorize="hasRole('MTA010_INIT')">権限割当</a></li>
 						<li><a href="#" class="menuItem" th:href="@{/MTB010/init}" sec:authorize="hasRole('MTB010_INIT')">部署メンテナンス</a></li>

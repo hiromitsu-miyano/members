@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jp.co.kunisys.member.common.BeanMap;
 import jp.co.kunisys.member.common.Constants;
+import jp.co.kunisys.member.common.util.BeanUtil;
 import jp.co.kunisys.member.form.MTD010Form;
 import jp.co.kunisys.member.query.Tables;
+import jp.co.kunisys.member.query.tables.records.SkillKindRecord;
+import jp.co.kunisys.member.query.tables.records.SkillRecord;
 
 /**
  * スキルメンテナンス サービス
@@ -32,6 +36,13 @@ public class MTD010Service {
 	 * @param form フォーム
 	 */
 	public void createSkillTreeInfo(MTD010Form form) {
+
+		//スキル種類の検索処理
+		List<SkillKindRecord> skillKindList = this.create.selectFrom(Tables.SKILL_KIND)
+															.orderBy(Tables.SKILL_KIND.SKILL_TYPE_NO.asc())
+															.fetch();
+		form.setSkillKindList(skillKindList);
+
 		Pattern pattern = Pattern.compile("/");
 
 		List<BeanMap> recList;
@@ -81,11 +92,16 @@ public class MTD010Service {
 	 * @return スキルのリスト
 	 */
 	private List<BeanMap> findBySkillType(int skillTypeNo) {
-		return this.create.selectFrom(Tables.SKILL)
-							.where(Tables.SKILL.SKILL_TYPE_NO.eq(Constants.SkillType.PHASE))
-							.and(Tables.SKILL.DELETED.isNull())
-							.orderBy(Tables.SKILL.SORTKEY)
-							.fetchInto(BeanMap.class);
+		List<SkillRecord> recList = this.create.selectFrom(Tables.SKILL)
+												.where(Tables.SKILL.SKILL_TYPE_NO.eq(Constants.SkillType.PHASE))
+												.and(Tables.SKILL.DELETED.isNull())
+												.orderBy(Tables.SKILL.SORTKEY)
+												.fetch();
+		return recList.stream().map(r -> {
+			BeanMap m = new BeanMap();
+			BeanUtil.copyProperties(r, m);
+			return m;
+		}).collect(Collectors.toList());
 	}
 
 }

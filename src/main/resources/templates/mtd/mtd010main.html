@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorator="co/layout">
+<head>
+<title th:text="${T(jp.co.kunisys.member.common.Constants).SYSTEM_NAME}">連携用ユーザ情報メンテナンス</title>
+<style type="text/css">
+<!--
+/* 画面全体 */
+.skillmainte {
+	width:85%;
+	/*height:80%;*/
+	min-width:850px;
+	/*min-height:450px;*/
+	overflow:auto;
+}
+/* コンボボックス */
+.cbox {
+	margin-top:1em;
+	clear:both;
+	float:left;
+	width:750px;
+}
+/*画面左*/
+.left-area {
+	float:left;
+	margin-top:1em;
+	margin-left:1em;
+	width:250px;
+	height:450px;
+	overflow:scroll;
+	background-color:white;
+	border-top:3px solid black;
+	border-bottom:3px solid black;
+	border-right:3px solid black;
+	border-left:3px solid black;
+}
+/* ツリー表示部分 */
+#skillTree	{
+	float:left;
+	margin-top:1em;
+	width:45%;
+	height:80%;
+	height:450px;
+	font-size:small;
+	overflow:scroll;
+	background-color:white;
+	border-top:3px solid black;
+	border-bottom:3px solid black;
+	border-right:3px solid black;
+	border-left:3px solid black;
+}
+/*画面右*/
+.right-area {
+	float:left;
+	margin-top:1em;
+	margin-left:1em;
+/*	width:45%;*/
+	width:410px;
+	height:80%;
+	/*min-height:550px;*/
+}
+.skillItem {
+	cursor:default;
+}
+/* スキル選択時のカーソルを標準状態(矢印)にする */
+/* 選択されたスキルの表示状態 */
+.selectSkill {
+	background-color:blue;
+	color:white;
+}
+/* 左画面の配置用 */
+.over {
+	overflow:scroll;
+	overflow-x:100%;
+	overflow-y:100%;
+}
+/* 右画面のテキストボックスの長さ */
+.text1 {
+	float:left;
+	clear:both;
+	width:400px;
+}
+/* down */
+.down1 {
+	float:left;
+	clear:both;
+	margin-bottom:1em;
+}
+.down2 {
+	float:left;
+	clear:both;
+	margin-bottom:2em;
+}
+.box9 {
+	float:left;
+/*	margin-top:1em;
+	margin-left:1em;*/
+}
+-->
+</style>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+$(function(){
+
+	<!--/* ---------------------------- */-->
+	<!--/* コンボボックス変更時イベント */-->
+	<!--/* ---------------------------- */-->
+	$("#skillTypeNo").change(function(){
+		this.form.action = 'init';
+		this.form.submit();
+	});
+
+	<!--/* -------------------- */-->
+	<!--/* スキル選択時イベント */-->
+	<!--/* -------------------- */-->
+	$(".skillItem").click(function(){
+		<!--/* 選択済スキルを通常に戻す */-->
+		$("#skillTree .selectSkill").removeClass("selectSkill");
+		<!--/* 選択したスキルを選択状態に変更 */-->
+		$(this).addClass("selectSkill");
+		<!--/* 選択したスキルのスキル番号取得 */-->
+		var skillNo = $(this).attr("id").slice(7);
+		<!--/* 選択したスキルの詳細情報を取得して表示 */-->
+		$.ajax({
+			url: "selectSkill",
+			cache: false,
+			dataType: "json",
+			data: {skillNo:skillNo},
+			success: function(json){
+				$("input[name='skillNo']").val(json.skillNo);
+				$("#name").val( json.name );
+				$("#shortName").val( json.shortName );
+				$("#comment").val( json.comment );
+				$("input[name='level']").val(json.level);
+				$("input[name='sortkey']").val(json.sortkey);
+				if (json.isCategory == "on") {
+					$("input[name='isCategory']").prop('checked',true);
+				} else {
+					$("input[name='isCategory']").prop('checked',false);
+				}
+				$("input[name='version']").val(json.version);
+			}
+		});
+	});
+
+	$.ajaxSetup({ifModified : true});
+	<!--/* 「登録」押下時イベント */-->
+	$("#insert").click(function(){
+		if (confirm("${MTD010Action.getMessage('message.confirm.insert')}")) {
+			return true;
+		} else {
+			return false;
+		}
+	});
+
+	<!--/* 「更新」押下時イベント  */-->
+	$("#update").click(function(){
+		if (confirm("${MTD010Action.getMessage('message.confirm.update')}")) {
+			return true;
+		} else {
+			return false;
+		}
+	});
+
+	<!--/* 「削除」押下時イベント */-->
+	$("#delete").click(function(){
+		if (confirm("${MTD010Action.getMessage('message.confirm.delete')}")) {
+			return true;
+		} else {
+			return false;
+		}
+	});
+
+	<!--/* 移動系ボタン押下時イベント */-->
+	$(".move").click(function(){
+		if (confirm("${MTD010Action.getMessage('message.mtd010.move')}")) {
+			return true;
+		} else {
+			return false;
+		}
+	});
+
+});
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="layout">
+	<div id="content_body" >
+		<div id="content">
+			<!-- メインコンテンツ設定欄 -->
+			<div align="center" layout:fragment="content">
+
+<div style="margiin: 15px;">
+<form th:object="${mtd010Form}" th:action="@{/MTD010}" method="post">
+<!--/* フォーム開始 */-->
+
+
+
+<div class="skillmainte">
+	<!--/* データの保持 */-->
+	<input type="hidden" th:field="*{skillNo}"/>
+	<input type="hidden" th:field="*{level}"/>
+	<input type="hidden" th:field="*{sortkey}"/>
+	<input type="hidden" th:field="*{version}"/>
+	<input type="hidden" th:field="*{parentSkillNo}"/>
+	<input type="hidden" th:field="*{parentSkillVersion}"/>
+
+	<!--/* コンボボックス */-->
+	<div class="cbox">
+		<select th:field="*{skillTypeNo}" id="skillTypeNo" class="box9">
+			<option th:each="rec : *{skillKindList}" th:value="${rec.skillTypeNo}" th:text="${rec.skillKindName}"></option>
+		</select>
+	</div>
+</div>
+
+
+
+<!--/* メッセージ */-->
+<div style="margin-bottom: 1em; color: #0000ff; font-weight: bold;">
+    <div th:if="${finished}">処理が完了しました。</div>
+</div>
+<!--/* エラーメッセージ */-->
+<ul class="errorMessage">
+	<li th:each="e : ${#fields.detailedErrors()}" th:text="${e.message}" />
+</ul>
+
+
+
+<!--/* フォーム終了 */-->
+</form>
+</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
