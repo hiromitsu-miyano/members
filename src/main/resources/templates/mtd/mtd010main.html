@@ -214,6 +214,19 @@ $(function(){
 			<option th:each="rec : *{skillKindList}" th:value="${rec.skillTypeNo}" th:text="${rec.skillKindName}"></option>
 		</select>
 	</div>
+	<!--/* 左ツリー */-->
+	<div id="skillTree">
+		<!--/* スキルにインデント付与しながら列挙 */-->
+		<div th:each="rec : *{skillList}" th:style="${'float: left; clear: left; text-indent: ' + rec.indent + 'em;'}">
+			<nobr>
+				<span th:id="'skillNo' + ${rec.skillNo}" th:inline="text" class="skillItem">
+					<img th:if="${rec.isCategory == 1}" th:src="@{/images/folder01.gif}"/>
+					<img th:if="${rec.isCategory != 1}" th:src="@{/images/document01.gif}"/>
+					[[${rec.name}]]
+				</span>
+			</nobr>
+		</div>
+	</div>
 </div>
 
 
