@@ -227,6 +227,50 @@ $(function(){
 			</nobr>
 		</div>
 	</div>
+	<!--/* 右画面 */-->
+	<div class="right-area">
+		<!--/* スキル番号 */-->
+		<!--/* スキル名称 */-->
+		<div class="floatLeft floatClear">
+			<div style="float: left">スキル名称<span style="color: red;">(必須)</span></div>
+			<div>
+				<input type="text" class="text1" th:errorClass="errorField text1" maxlength="100" th:field="*{name}"/>
+			</div>
+		</div>
+		<!--/* スキル略称 */-->
+		<div class="floatLeft floatClear">
+			<div style="float: left">略称<span style="color: red;">(必須)</span></div>
+			<div>
+				<input type="text" class="text1" th:errorClass="errorField text1" maxlength="12" th:field="*{shortName}"/>
+			</div>
+		</div>
+		<!--/* コメント */-->
+		<div class="floatLeft floatClear">
+			<div style="float: left">コメント</div>
+			<div>
+				<input type="text" class="text1" th:errorClass="errorField text1" maxlength="100" th:field="*{comment}"/>
+			</div>
+		</div>
+		<!--/* 業務経歴に～ */-->
+		<div class="floatLeft floatClear">
+			<div style="float: left">コメント</div>
+			<div>
+				<input type="checkbox" value="on" th:field="*{isCategory}"/>業務経歴に設定できないようにする
+			</div>
+		</div>
+		<!--/* 登録／更新／削除ボタン */-->
+		<div class="floatLeft floatClear">
+			<span class="right1">
+				<input type="submit" value="登録" id="insert" name="insert"/>
+			</span>
+			<span class="right1">
+				<input type="submit" value="更新" id="update" name="update"/>
+			</span>
+			<span class="right1">
+				<input type="submit" value="削除" id="delete" name="delete"/>
+			</span>
+		</div>
+	</div>
 </div>
 
 
